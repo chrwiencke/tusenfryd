@@ -1,0 +1,150 @@
+<%- include('../layout-header', { 
+    title: 'Attractions'
+}) %>
+
+<div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
+    <h1 class="text-3xl font-bold flex items-center space-x-2 mb-4 sm:mb-0">
+        <i class="bi bi-star text-primary-600"></i>
+        <span>Attractions</span>
+    </h1>
+</div>
+
+<!-- Search and Filters -->
+<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+    <form method="GET" action="/attractions">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div class="lg:col-span-2">
+                <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Search Attractions</label>
+                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500" 
+                       id="search" name="search" value="<%= searchQuery %>" placeholder="Search by name or description...">
+            </div>
+            <div>
+                <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500" id="category" name="category">
+                    <option value="all" <%= selectedCategory === 'all' ? 'selected' : '' %>>All Categories</option>
+                    <option value="roller-coaster" <%= selectedCategory === 'roller-coaster' ? 'selected' : '' %>>Roller Coaster</option>
+                    <option value="family" <%= selectedCategory === 'family' ? 'selected' : '' %>>Family</option>
+                    <option value="thrill" <%= selectedCategory === 'thrill' ? 'selected' : '' %>>Thrill</option>
+                    <option value="water" <%= selectedCategory === 'water' ? 'selected' : '' %>>Water</option>
+                    <option value="children" <%= selectedCategory === 'children' ? 'selected' : '' %>>Children</option>
+                </select>
+            </div>
+            <div>
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500" id="status" name="status">
+                    <option value="all" <%= selectedStatus === 'all' ? 'selected' : '' %>>All Status</option>
+                    <option value="open" <%= selectedStatus === 'open' ? 'selected' : '' %>>Open</option>
+                    <option value="closed" <%= selectedStatus === 'closed' ? 'selected' : '' %>>Closed</option>
+                    <option value="maintenance" <%= selectedStatus === 'maintenance' ? 'selected' : '' %>>Maintenance</option>
+                </select>
+            </div>
+            <div class="flex flex-col justify-end">
+                <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2">
+                    <i class="bi bi-search"></i>
+                    <span>Search</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Results -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% if (attractions.length === 0) { %>
+        <div class="md:col-span-2 lg:col-span-3">
+            <div class="text-center py-12">
+                <i class="bi bi-search text-6xl text-gray-400 mb-4"></i>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">No attractions found</h3>
+                <p class="text-gray-600 mb-6">Try adjusting your search criteria.</p>
+                <a href="/attractions" class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">View All Attractions</a>
+            </div>
+        </div>
+    <% } else { %>
+        <% attractions.forEach(attraction => { %>
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden h-full flex flex-col">
+            <img src="<%= attraction.image %>" class="w-full h-48 object-cover" alt="<%= attraction.name %>">
+            <div class="p-6 flex flex-col flex-grow">
+                <div class="flex justify-between items-start mb-3">
+                    <h5 class="text-lg font-semibold"><%= attraction.name %></h5>
+                    <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs font-medium"><%= attraction.category %></span>
+                </div>
+                
+                <p class="text-gray-600 mb-4 flex-grow"><%= attraction.description.substring(0, 120) %>...</p>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <span class="text-sm text-gray-500">Status:</span>
+                        <div class="mt-1">
+                            <% if (attraction.status === 'open') { %>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1 w-fit">
+                                    <i class="bi bi-check-circle"></i>
+                                    <span>Open</span>
+                                </span>
+                            <% } else if (attraction.status === 'closed') { %>
+                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1 w-fit">
+                                    <i class="bi bi-x-circle"></i>
+                                    <span>Closed</span>
+                                </span>
+                            <% } else { %>
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1 w-fit">
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                    <span>Maintenance</span>
+                                </span>
+                            <% } %>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-sm text-gray-500">Wait Time:</span>
+                        <div class="mt-1">
+                            <% if (attraction.status === 'open') { %>
+                                <span class="font-semibold <%= attraction.waitTime > 30 ? 'text-red-600' : attraction.waitTime > 15 ? 'text-yellow-600' : 'text-green-600' %>">
+                                    <%= attraction.waitTime %> min
+                                </span>
+                            <% } else { %>
+                                <span class="text-gray-500">-</span>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+
+                <% if (attraction.heightRequirement > 0) { %>
+                <div class="mb-4">
+                    <span class="text-sm text-gray-500 flex items-center space-x-1">
+                        <i class="bi bi-person-standing"></i>
+                        <span>Min height: <%= attraction.heightRequirement %>cm</span>
+                    </span>
+                </div>
+                <% } %>
+                
+                <div class="space-y-2">
+                    <a href="/attractions/<%= attraction._id %>" class="w-full border border-primary-600 text-primary-600 hover:bg-primary-50 transition-colors px-4 py-2 rounded-lg font-medium text-center flex items-center justify-center space-x-2">
+                        <i class="bi bi-info-circle"></i>
+                        <span>View Details</span>
+                    </a>
+                    <% if (attraction.status === 'open') { %>
+                        <a href="/attractions/<%= attraction._id %>/reserve" class="w-full bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium text-center flex items-center justify-center space-x-2 transition-colors">
+                            <i class="bi bi-calendar-plus"></i>
+                            <span>Reserve Queue Spot</span>
+                        </a>
+                    <% } else { %>
+                        <button class="w-full bg-gray-300 text-gray-500 px-4 py-2 rounded-lg font-medium text-center flex items-center justify-center space-x-2" disabled>
+                            <i class="bi bi-x-circle"></i>
+                            <span>Not Available</span>
+                        </button>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <% }); %>
+    <% } %>
+</div>
+
+<% if (attractions.length > 0) { %>
+<div class="mt-6">
+    <p class="text-gray-600">
+        Showing <%= attractions.length %> attraction<%= attractions.length !== 1 ? 's' : '' %>
+    </p>
+</div>
+<% } %>
+
+<%- include('../layout-footer') %>

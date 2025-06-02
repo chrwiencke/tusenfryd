@@ -1,0 +1,165 @@
+<%- include('../admin-layout-header', { 
+    title: 'Create Attraction', 
+    pageTitle: 'Add New Attraction',
+    user: user
+}) %>
+
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h4 class="text-xl font-semibold text-gray-900">Attraction Details</h4>
+        </div>
+        <div class="p-6">
+            <form action="/admin/attractions" method="POST" enctype="multipart/form-data" class="space-y-6">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Attraction Name *</label>
+                                <input type="text" class="form-control" id="name" name="name" required
+                                       value="<%= locals.oldInput ? oldInput.name : '' %>">
+                                <% if (locals.errors && errors.name) { %>
+                                    <div class="text-danger mt-1"><%= errors.name.msg %></div>
+                                <% } %>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Category *</label>
+                                <input type="text" class="form-control" id="category" name="category" required
+                                       value="<%= locals.oldInput ? oldInput.category : '' %>"
+                                       placeholder="e.g., Roller Coaster, Family Ride">
+                                <% if (locals.errors && errors.category) { %>
+                                    <div class="text-danger mt-1"><%= errors.category.msg %></div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="type" class="form-label">Type *</label>
+                                <select class="form-select" id="type" name="type" required>
+                                    <option value="">Select type...</option>
+                                    <option value="ride" <%= locals.oldInput && oldInput.type === 'ride' ? 'selected' : '' %>>Ride</option>
+                                    <option value="show" <%= locals.oldInput && oldInput.type === 'show' ? 'selected' : '' %>>Show</option>
+                                    <option value="experience" <%= locals.oldInput && oldInput.type === 'experience' ? 'selected' : '' %>>Experience</option>
+                                </select>
+                                <% if (locals.errors && errors.type) { %>
+                                    <div class="text-danger mt-1"><%= errors.type.msg %></div>
+                                <% } %>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="thrillLevel" class="form-label">Thrill Level *</label>
+                                <select class="form-select" id="thrillLevel" name="thrillLevel" required>
+                                    <option value="">Select thrill level...</option>
+                                    <option value="low" <%= locals.oldInput && oldInput.thrillLevel === 'low' ? 'selected' : '' %>>Low</option>
+                                    <option value="medium" <%= locals.oldInput && oldInput.thrillLevel === 'medium' ? 'selected' : '' %>>Medium</option>
+                                    <option value="high" <%= locals.oldInput && oldInput.thrillLevel === 'high' ? 'selected' : '' %>>High</option>
+                                    <option value="extreme" <%= locals.oldInput && oldInput.thrillLevel === 'extreme' ? 'selected' : '' %>>Extreme</option>
+                                </select>
+                                <% if (locals.errors && errors.thrillLevel) { %>
+                                    <div class="text-danger mt-1"><%= errors.thrillLevel.msg %></div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description *</label>
+                        <textarea class="form-control" id="description" name="description" rows="4" required
+                                  placeholder="Describe the attraction, its features, and what visitors can expect..."><%= locals.oldInput ? oldInput.description : '' %></textarea>
+                        <% if (locals.errors && errors.description) { %>
+                            <div class="text-danger mt-1"><%= errors.description.msg %></div>
+                        <% } %>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="capacity" class="form-label">Capacity *</label>
+                                <input type="number" class="form-control" id="capacity" name="capacity" required
+                                       min="1" max="1000" value="<%= locals.oldInput ? oldInput.capacity : '' %>"
+                                       placeholder="Number of people">
+                                <% if (locals.errors && errors.capacity) { %>
+                                    <div class="text-danger mt-1"><%= errors.capacity.msg %></div>
+                                <% } %>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="duration" class="form-label">Duration (minutes) *</label>
+                                <input type="number" class="form-control" id="duration" name="duration" required
+                                       min="1" max="180" value="<%= locals.oldInput ? oldInput.duration : '' %>"
+                                       placeholder="Duration in minutes">
+                                <% if (locals.errors && errors.duration) { %>
+                                    <div class="text-danger mt-1"><%= errors.duration.msg %></div>
+                                <% } %>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="minHeight" class="form-label">Min Height (cm)</label>
+                                <input type="number" class="form-control" id="minHeight" name="minHeight"
+                                       min="0" max="200" value="<%= locals.oldInput ? oldInput.minHeight : '' %>"
+                                       placeholder="Optional height requirement">
+                                <% if (locals.errors && errors.minHeight) { %>
+                                    <div class="text-danger mt-1"><%= errors.minHeight.msg %></div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status *</label>
+                                <select class="form-select" id="status" name="status" required>
+                                    <option value="open" <%= locals.oldInput && oldInput.status === 'open' ? 'selected' : '' %>>Open</option>
+                                    <option value="closed" <%= locals.oldInput && oldInput.status === 'closed' ? 'selected' : '' %>>Closed</option>
+                                    <option value="maintenance" <%= locals.oldInput && oldInput.status === 'maintenance' ? 'selected' : '' %>>Maintenance</option>
+                                </select>
+                                <% if (locals.errors && errors.status) { %>
+                                    <div class="text-danger mt-1"><%= errors.status.msg %></div>
+                                <% } %>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Attraction Image</label>
+                                <input type="file" class="form-control" id="image" name="image" 
+                                       accept="image/*">
+                                <small class="form-text text-muted">Upload an image for this attraction (optional)</small>
+                                <% if (locals.errors && errors.image) { %>
+                                    <div class="text-danger mt-1"><%= errors.image.msg %></div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="features" class="form-label">Features</label>
+                        <textarea class="form-control" id="features" name="features" rows="3"
+                                  placeholder="Special features, accessibility options, or warnings (one per line)"><%= locals.oldInput ? oldInput.features : '' %></textarea>
+                        <small class="form-text text-muted">Enter each feature on a new line</small>
+                        <% if (locals.errors && errors.features) { %>
+                            <div class="text-danger mt-1"><%= errors.features.msg %></div>
+                        <% } %>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="/admin/attractions" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Attractions
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Create Attraction
+                        </button>
+                    </div>
+                </form>
+        </div>
+    </div>
+</div>
+
+<%- include('../admin-layout-footer') %>

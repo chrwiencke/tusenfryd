@@ -1,0 +1,181 @@
+<%- include('../layout-header', { 
+    title: 'Welcome to Tusenfryd'
+}) %>
+
+<!-- Hero Section -->
+<div class="bg-gradient-to-r from-primary-600 to-primary-800 text-white py-16 mb-8 rounded-lg shadow-lg">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <div class="space-y-6">
+            <h1 class="text-4xl md:text-5xl font-bold leading-tight">Welcome to Tusenfryd!</h1>
+            <p class="text-xl text-primary-100">Experience Norway's most thrilling amusement park with exciting rides, family attractions, and unforgettable memories.</p>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <a href="/attractions" class="bg-white text-primary-600 hover:bg-gray-100 transition-colors px-6 py-3 rounded-lg font-semibold flex items-center justify-center space-x-2">
+                    <i class="bi bi-star-fill"></i>
+                    <span>Explore Attractions</span>
+                </a>
+                <a href="/check-reservation" class="border-2 border-white text-white hover:bg-white hover:text-primary-600 transition-colors px-6 py-3 rounded-lg font-semibold flex items-center justify-center space-x-2">
+                    <i class="bi bi-calendar-check"></i>
+                    <span>Check Reservation</span>
+                </a>
+            </div>
+        </div>
+        <div class="text-center">
+            <i class="bi bi-star-fill text-8xl text-yellow-400 opacity-75"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Park Status -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+        <h5 class="text-lg font-semibold mb-3 flex items-center space-x-2">
+            <i class="bi bi-clock text-primary-600"></i>
+            <span>Park Hours</span>
+        </h5>
+        <p class="text-gray-700">
+            <span class="font-medium">Today:</span> 
+            <%= parkHours.open %> - <%= parkHours.close %>
+        </p>
+    </div>
+    <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+        <h5 class="text-lg font-semibold mb-3 flex items-center space-x-2">
+            <i class="bi bi-people text-green-600"></i>
+            <span>Park Status</span>
+        </h5>
+        <p class="flex items-center space-x-2">
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Open</span>
+            <span class="text-gray-500 text-sm">Welcome to the fun!</span>
+        </p>
+    </div>
+</div>
+
+<!-- Notifications -->
+<% if (notifications && notifications.length > 0) { %>
+<div class="mb-8">
+    <h4 class="text-xl font-semibold mb-4 flex items-center space-x-2">
+        <i class="bi bi-bell text-yellow-500"></i>
+        <span>Park Updates</span>
+    </h4>
+    <% notifications.forEach(notification => { %>
+        <div class="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg mb-3 relative">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-info-circle text-blue-400"></i>
+                </div>
+                <div class="ml-3 flex-1">
+                    <p class="text-sm"><%= notification.value.message %></p>
+                </div>
+                <div class="ml-auto pl-3">
+                    <button type="button" class="inline-flex bg-blue-50 rounded-md p-1.5 text-blue-500 hover:bg-blue-100 focus:outline-none" onclick="this.parentElement.parentElement.parentElement.parentElement.remove()">
+                        <span class="sr-only">Dismiss</span>
+                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    <% }); %>
+</div>
+<% } %>
+
+<!-- Attractions Grid -->
+<div class="mb-8">
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
+        <h2 class="text-2xl font-bold mb-4 sm:mb-0 flex items-center space-x-2">
+            <i class="bi bi-star text-primary-600"></i>
+            <span>Popular Attractions</span>
+        </h2>
+        <a href="/attractions" class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 w-fit">
+            <span>View All</span>
+            <i class="bi bi-arrow-right"></i>
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% attractions.slice(0, 6).forEach(attraction => { %>
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden h-full flex flex-col">
+            <img src="<%= attraction.image %>" class="w-full h-48 object-cover" alt="<%= attraction.name %>">
+            <div class="p-6 flex flex-col flex-grow">
+                <h5 class="text-lg font-semibold mb-2"><%= attraction.name %></h5>
+                <p class="text-gray-600 mb-4 flex-grow"><%= attraction.description.substring(0, 100) %>...</p>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <span class="text-sm text-gray-500">Status:</span>
+                        <div class="mt-1">
+                            <% if (attraction.status === 'open') { %>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1 w-fit">
+                                    <i class="bi bi-check-circle"></i>
+                                    <span>Open</span>
+                                </span>
+                            <% } else if (attraction.status === 'closed') { %>
+                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1 w-fit">
+                                    <i class="bi bi-x-circle"></i>
+                                    <span>Closed</span>
+                                </span>
+                            <% } else { %>
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1 w-fit">
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                    <span>Maintenance</span>
+                                </span>
+                            <% } %>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-sm text-gray-500">Wait Time:</span>
+                        <div class="mt-1 font-semibold"><%= attraction.waitTime %> min</div>
+                    </div>
+                </div>
+                
+                <div class="space-y-2">
+                    <a href="/attractions/<%= attraction._id %>" class="w-full border border-primary-600 text-primary-600 hover:bg-primary-50 transition-colors px-4 py-2 rounded-lg font-medium text-center flex items-center justify-center space-x-2">
+                        <i class="bi bi-info-circle"></i>
+                        <span>Details</span>
+                    </a>
+                    <% if (attraction.status === 'open') { %>
+                        <a href="/attractions/<%= attraction._id %>/reserve" class="w-full bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium text-center flex items-center justify-center space-x-2 transition-colors">
+                            <i class="bi bi-calendar-plus"></i>
+                            <span>Reserve Spot</span>
+                        </a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <% }); %>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+    <div class="text-center">
+        <div class="text-4xl text-primary-600 mb-2">
+            <i class="bi bi-star-fill"></i>
+        </div>
+        <h4 class="text-2xl font-bold text-gray-900"><%= attractions.length %></h4>
+        <p class="text-gray-600">Attractions</p>
+    </div>
+    <div class="text-center">
+        <div class="text-4xl text-green-600 mb-2">
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <h4 class="text-2xl font-bold text-gray-900"><%= attractions.filter(a => a.status === 'open').length %></h4>
+        <p class="text-gray-600">Open Now</p>
+    </div>
+    <div class="text-center">
+        <div class="text-4xl text-blue-600 mb-2">
+            <i class="bi bi-clock-fill"></i>
+        </div>
+        <h4 class="text-2xl font-bold text-gray-900"><%= Math.round(attractions.reduce((acc, a) => acc + a.waitTime, 0) / attractions.length) %></h4>
+        <p class="text-gray-600">Avg Wait (min)</p>
+    </div>
+    <div class="text-center">
+        <div class="text-4xl text-yellow-600 mb-2">
+            <i class="bi bi-people-fill"></i>
+        </div>
+        <h4 class="text-2xl font-bold text-gray-900"><%= attractions.reduce((acc, a) => acc + a.currentQueue, 0) %></h4>
+        <p class="text-gray-600">In Queues</p>
+    </div>
+</div>
+
+<%- include('../layout-footer') %>

@@ -1,0 +1,243 @@
+<%- include('../admin-layout-header', { 
+    title: 'Manage Reservations', 
+    pageTitle: 'Reservation Management',
+    user: user
+}) %>
+
+<div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold text-gray-900 mb-4 sm:mb-0">All Reservations</h2>
+    <div class="flex flex-wrap gap-2">
+        <input type="radio" name="statusFilter" id="all" class="sr-only" checked>
+        <label for="all" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-200 transition-colors status-filter active">All</label>
+
+        <input type="radio" name="statusFilter" id="waiting" class="sr-only">
+        <label for="waiting" class="px-4 py-2 text-sm font-medium text-orange-700 bg-orange-50 border border-orange-200 rounded-lg cursor-pointer hover:bg-orange-100 transition-colors status-filter">Waiting</label>
+
+        <input type="radio" name="statusFilter" id="active" class="sr-only">
+        <label for="active" class="px-4 py-2 text-sm font-medium text-green-700 bg-green-50 border border-green-200 rounded-lg cursor-pointer hover:bg-green-100 transition-colors status-filter">Active</label>
+
+        <input type="radio" name="statusFilter" id="completed" class="sr-only">
+        <label for="completed" class="px-4 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors status-filter">Completed</label>
+
+        <input type="radio" name="statusFilter" id="cancelled" class="sr-only">
+        <label for="cancelled" class="px-4 py-2 text-sm font-medium text-red-700 bg-red-50 border border-red-200 rounded-lg cursor-pointer hover:bg-red-100 transition-colors status-filter">Cancelled</label>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+        <h3 class="text-2xl font-bold text-orange-600"><%= stats.waiting || 0 %></h3>
+        <p class="text-gray-600">Waiting</p>
+    </div>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+        <h3 class="text-2xl font-bold text-green-600"><%= stats.active || 0 %></h3>
+        <p class="text-gray-600">Active</p>
+    </div>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+        <h3 class="text-2xl font-bold text-blue-600"><%= stats.completed || 0 %></h3>
+        <p class="text-gray-600">Completed</p>
+    </div>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+        <h3 class="text-2xl font-bold text-red-600"><%= stats.cancelled || 0 %></h3>
+        <p class="text-gray-600">Cancelled</p>
+    </div>
+</div>
+                <p class="card-text">Completed</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="text-danger"><%= stats.cancelled || 0 %></h3>
+                <p class="card-text">Cancelled</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% if (reservations && reservations.length > 0) { %>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reservation ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Visitor</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attraction</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reserved Time</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Party Size</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="reservationsTable" class="bg-white divide-y divide-gray-200">
+                    <% reservations.forEach(reservation => { %>
+                    <tr data-status="<%= reservation.status %>" class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <code class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-sm">#<%= reservation.reservationId %></code>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm font-medium text-gray-900"><%= reservation.visitorName %></div>
+                            <div class="text-sm text-gray-500">
+                                <i class="fas fa-envelope mr-1"></i><%= reservation.visitorEmail %>
+                            </div>
+                            <% if (reservation.visitorPhone) { %>
+                                <div class="text-sm text-gray-500">
+                                    <i class="fas fa-phone mr-1"></i><%= reservation.visitorPhone %>
+                                </div>
+                            <% } %>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm font-medium text-gray-900"><%= reservation.attraction.name %></div>
+                            <div class="text-sm text-gray-500"><%= reservation.attraction.category %></div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                                <%= reservation.status === 'waiting' ? 'bg-orange-100 text-orange-800' : 
+                                    reservation.status === 'active' ? 'bg-green-100 text-green-800' : 
+                                    reservation.status === 'completed' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800' %>">
+                                <%= reservation.status.charAt(0).toUpperCase() + reservation.status.slice(1) %>
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <% if (reservation.status === 'waiting') { %>
+                                <div class="font-medium">#<%= reservation.position %></div>
+                                <div class="text-gray-500">~<%= reservation.estimatedWaitTime %> min wait</div>
+                            <% } else if (reservation.status === 'active') { %>
+                                <span class="text-green-600 font-medium"><i class="fas fa-play mr-1"></i> Your Turn</span>
+                            <% } else { %>
+                                <span class="text-gray-400">N/A</span>
+                            <% } %>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <%= new Date(reservation.createdAt).toLocaleString() %>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <i class="fas fa-users mr-1"></i><%= reservation.partySize %>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex space-x-2">
+                                <a href="/admin/reservations/<%= reservation._id %>" class="text-blue-600 hover:text-blue-900" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <% if (reservation.status === 'waiting') { %>
+                                    <button class="text-green-600 hover:text-green-900" title="Mark as Active" 
+                                            onclick="updateStatus('<%= reservation._id %>', 'active')">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                <% } %>
+                                <% if (reservation.status === 'active') { %>
+                                    <button class="text-blue-600 hover:text-blue-900" title="Mark as Completed" 
+                                            onclick="updateStatus('<%= reservation._id %>', 'completed')">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                <% } %>
+                                <% if (reservation.status === 'waiting' || reservation.status === 'active') { %>
+                                    <button class="text-red-600 hover:text-red-900" title="Cancel" 
+                                            onclick="updateStatus('<%= reservation._id %>', 'cancelled')">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                <% } %>
+                            </div>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+<% } else { %>
+    <div class="text-center py-12">
+        <i class="fas fa-calendar-times text-4xl text-gray-400 mb-4"></i>
+        <h4 class="text-xl font-semibold text-gray-600 mb-2">No reservations found</h4>
+        <p class="text-gray-500">Reservations will appear here when visitors start booking queue spots.</p>
+    </div>
+<% } %>
+
+<script>
+// Filter reservations by status
+document.querySelectorAll('input[name="statusFilter"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const status = this.id;
+        const rows = document.querySelectorAll('#reservationsTable tr');
+        
+        // Update active filter styling
+        document.querySelectorAll('.status-filter').forEach(label => {
+            label.classList.remove('active');
+            if (label.classList.contains('bg-gray-100')) {
+                label.classList.remove('bg-gray-200');
+                label.classList.add('bg-gray-100');
+            } else if (label.classList.contains('bg-orange-50')) {
+                label.classList.remove('bg-orange-100');
+                label.classList.add('bg-orange-50');
+            } else if (label.classList.contains('bg-green-50')) {
+                label.classList.remove('bg-green-100');
+                label.classList.add('bg-green-50');
+            } else if (label.classList.contains('bg-blue-50')) {
+                label.classList.remove('bg-blue-100');
+                label.classList.add('bg-blue-50');
+            } else if (label.classList.contains('bg-red-50')) {
+                label.classList.remove('bg-red-100');
+                label.classList.add('bg-red-50');
+            }
+        });
+        
+        // Activate current filter
+        const activeLabel = document.querySelector(`label[for="${status}"]`);
+        activeLabel.classList.add('active');
+        if (activeLabel.classList.contains('bg-gray-100')) {
+            activeLabel.classList.remove('bg-gray-100');
+            activeLabel.classList.add('bg-gray-200');
+        } else if (activeLabel.classList.contains('bg-orange-50')) {
+            activeLabel.classList.remove('bg-orange-50');
+            activeLabel.classList.add('bg-orange-100');
+        } else if (activeLabel.classList.contains('bg-green-50')) {
+            activeLabel.classList.remove('bg-green-50');
+            activeLabel.classList.add('bg-green-100');
+        } else if (activeLabel.classList.contains('bg-blue-50')) {
+            activeLabel.classList.remove('bg-blue-50');
+            activeLabel.classList.add('bg-blue-100');
+        } else if (activeLabel.classList.contains('bg-red-50')) {
+            activeLabel.classList.remove('bg-red-50');
+            activeLabel.classList.add('bg-red-100');
+        }
+        
+        rows.forEach(row => {
+            if (status === 'all') {
+                row.style.display = '';
+            } else {
+                row.style.display = row.dataset.status === status ? '' : 'none';
+            }
+        });
+    });
+});
+
+// Update reservation status
+function updateStatus(reservationId, newStatus) {
+    if (confirm(`Are you sure you want to mark this reservation as ${newStatus}?`)) {
+        fetch(`/admin/reservations/${reservationId}/status`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: newStatus })
+        })
+        .then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Failed to update reservation status');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while updating the reservation');
+        });
+    }
+}
+</script>
+
+<%- include('../admin-layout-footer') %>

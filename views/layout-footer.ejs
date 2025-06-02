@@ -1,0 +1,104 @@
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="lg:col-span-1">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="bi bi-star-fill text-yellow-400 text-xl"></i>
+                        <h5 class="text-xl font-bold">Tusenfryd</h5>
+                    </div>
+                    <p class="text-gray-400 mb-4">Norway's most exciting amusement park with thrilling rides and attractions for the whole family.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h6 class="text-lg font-semibold mb-4">Quick Links</h6>
+                    <ul class="space-y-2">
+                        <li><a href="/" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="/attractions" class="text-gray-400 hover:text-white transition-colors">Attractions</a></li>
+                        <li><a href="/check-reservation" class="text-gray-400 hover:text-white transition-colors">My Reservations</a></li>
+                        <li><a href="/contact" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h6 class="text-lg font-semibold mb-4">Information</h6>
+                    <ul class="space-y-2">
+                        <li><a href="/hours" class="text-gray-400 hover:text-white transition-colors">Opening Hours</a></li>
+                        <li><a href="/prices" class="text-gray-400 hover:text-white transition-colors">Ticket Prices</a></li>
+                        <li><a href="/safety" class="text-gray-400 hover:text-white transition-colors">Safety Guidelines</a></li>
+                        <li><a href="/faq" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h6 class="text-lg font-semibold mb-4">Contact Info</h6>
+                    <div class="space-y-2 text-gray-400">
+                        <p class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-primary-400"></i>
+                            <span>Tusenfrydveien 1, 1407 Vinterbro, Norway</span>
+                        </p>
+                        <p class="flex items-center">
+                            <i class="fas fa-phone mr-3 text-primary-400"></i>
+                            <span>+47 64 97 64 97</span>
+                        </p>
+                        <p class="flex items-center">
+                            <i class="fas fa-envelope mr-3 text-primary-400"></i>
+                            <span>info@tusenfryd.no</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="my-8 border-gray-700">
+            
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <p class="text-gray-400 mb-4 md:mb-0">&copy; 2024 Tusenfryd. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="/privacy" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="/terms" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Auto-hide flash messages after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.bg-green-50, .bg-red-50');
+            alerts.forEach(function(alert) {
+                if (alert) {
+                    alert.style.transition = 'opacity 0.5s ease-out';
+                    alert.style.opacity = '0';
+                    setTimeout(function() {
+                        alert.remove();
+                    }, 500);
+                }
+            });
+        }, 5000);
+    </script>
+
+    <!-- Custom JS -->
+    <script src="/js/main.js"></script>
+</body>
+</html>

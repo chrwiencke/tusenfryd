@@ -1,0 +1,140 @@
+<%- include('../layout-header', { 
+    title: attraction.name
+}) %>
+
+<nav aria-label="breadcrumb" class="mb-6">
+    <ol class="flex items-center space-x-2 text-sm">
+        <li><a href="/" class="text-primary-600 hover:text-primary-700 transition-colors">Home</a></li>
+        <li class="text-gray-400">/</li>
+        <li><a href="/attractions" class="text-primary-600 hover:text-primary-700 transition-colors">Attractions</a></li>
+        <li class="text-gray-400">/</li>
+        <li class="text-gray-600"><%= attraction.name %></li>
+    </ol>
+</nav>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2">
+        <!-- Attraction Image -->
+        <img src="<%= attraction.image %>" class="w-full h-96 object-cover rounded-lg shadow-sm mb-6" alt="<%= attraction.name %>">
+        
+        <!-- Attraction Details -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4">
+                <h1 class="text-3xl font-bold mb-2 sm:mb-0"><%= attraction.name %></h1>
+                <span class="bg-primary-100 text-primary-800 px-3 py-1 rounded-full text-sm font-medium w-fit"><%= attraction.category %></span>
+            </div>
+            
+            <p class="text-lg text-gray-700 leading-relaxed"><%= attraction.description %></p>
+            
+            <!-- Attraction Specs -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <div>
+                    <h6 class="text-sm font-medium text-gray-500 mb-1">Capacity</h6>
+                    <p class="flex items-center space-x-2">
+                        <i class="bi bi-people text-gray-600"></i>
+                        <span><%= attraction.capacity %> guests</span>
+                    </p>
+                </div>
+                <% if (attraction.heightRequirement > 0) { %>
+                <div>
+                    <h6 class="text-sm font-medium text-gray-500 mb-1">Height Requirement</h6>
+                    <p class="flex items-center space-x-2">
+                        <i class="bi bi-person-standing text-gray-600"></i>
+                        <span>Minimum <%= attraction.heightRequirement %>cm</span>
+                    </p>
+                </div>
+                <% } %>
+                <div>
+                    <h6 class="text-sm font-medium text-gray-500 mb-1">Opening Hours</h6>
+                    <p class="flex items-center space-x-2">
+                        <i class="bi bi-clock text-gray-600"></i>
+                        <span><%= attraction.openingHours.start %> - <%= attraction.openingHours.end %></span>
+                    </p>
+                </div>
+                <div>
+                    <h6 class="text-sm font-medium text-gray-500 mb-1">Category</h6>
+                    <p class="flex items-center space-x-2">
+                        <i class="bi bi-tag text-gray-600"></i>
+                        <span><%= attraction.category.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()) %></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="lg:col-span-1">
+        <!-- Status Card -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center mb-6">
+            <h5 class="text-lg font-semibold mb-4">Current Status</h5>
+            
+            <% if (attraction.status === 'open') { %>
+                <div class="text-green-600 mb-4">
+                    <i class="bi bi-check-circle-fill text-6xl"></i>
+                </div>
+                <h4 class="text-xl font-bold text-green-600 mb-2">Open</h4>
+                <p class="text-gray-600">Ready for guests!</p>
+            <% } else if (attraction.status === 'closed') { %>
+                <div class="text-red-600 mb-4">
+                    <i class="bi bi-x-circle-fill text-6xl"></i>
+                </div>
+                <h4 class="text-xl font-bold text-red-600 mb-2">Closed</h4>
+                <p class="text-gray-600">Currently not operating</p>
+            <% } else { %>
+                <div class="text-yellow-600 mb-4">
+                    <i class="bi bi-exclamation-triangle-fill text-6xl"></i>
+                </div>
+                <h4 class="text-xl font-bold text-yellow-600 mb-2">Maintenance</h4>
+                <p class="text-gray-600">Under maintenance</p>
+            <% } %>
+        </div>
+        
+        <!-- Wait Time Card -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center mb-6">
+            <h5 class="text-lg font-semibold mb-4">Wait Information</h5>
+            
+            <% if (attraction.status === 'open') { %>
+                <div class="mb-4">
+                    <div class="text-6xl font-bold <%= attraction.waitTime > 30 ? 'text-red-600' : attraction.waitTime > 15 ? 'text-yellow-600' : 'text-green-600' %>">
+                        <%= attraction.waitTime %>
+                    </div>
+                    <span class="text-gray-500">minutes</span>
+                </div>
+                <p class="text-gray-600 mb-4">Estimated wait time</p>
+                
+                <div>
+                    <span class="text-sm text-gray-500">People in queue:</span>
+                    <div class="text-lg font-semibold"><%= queueCount %></div>
+                </div>
+            <% } else { %>
+                <div class="text-gray-400 mb-4">
+                    <i class="bi bi-dash-circle text-6xl"></i>
+                </div>
+                <p class="text-gray-600">No wait time available</p>
+            <% } %>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="space-y-3">
+            <% if (attraction.status === 'open') { %>
+                <a href="/attractions/<%= attraction._id %>/reserve" class="w-full bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-semibold text-center flex items-center justify-center space-x-2 transition-colors">
+                    <i class="bi bi-calendar-plus"></i>
+                    <span>Reserve Queue Spot</span>
+                </a>
+                <p class="text-sm text-gray-500 text-center">Skip the wait with our queue reservation system</p>
+            <% } else { %>
+                <button class="w-full bg-gray-300 text-gray-500 px-6 py-3 rounded-lg font-semibold text-center flex items-center justify-center space-x-2" disabled>
+                    <i class="bi bi-x-circle"></i>
+                    <span>Reservations Unavailable</span>
+                </button>
+                <p class="text-sm text-gray-500 text-center">This attraction is currently not accepting reservations</p>
+            <% } %>
+            
+            <a href="/attractions" class="w-full border border-primary-600 text-primary-600 hover:bg-primary-50 px-6 py-3 rounded-lg font-semibold text-center flex items-center justify-center space-x-2 transition-colors">
+                <i class="bi bi-arrow-left"></i>
+                <span>Back to Attractions</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<%- include('../layout-footer') %>

@@ -1,0 +1,254 @@
+<%- include('../admin-layout', { 
+    title: 'Attraction Details', 
+    pageTitle: 'Attraction Details',
+    user: user
+}) %>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0"><%= attraction.name %></h4>
+                <div>
+                    <a href="/admin/attractions/<%= attraction._id %>/edit" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <button class="btn btn-danger" onclick="confirmDelete('<%= attraction._id %>', '<%= attraction.name %>')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Basic Information</h6>
+                        <table class="table table-sm">
+                            <tr>
+                                <td><strong>Category:</strong></td>
+                                <td><%= attraction.category %></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Type:</strong></td>
+                                <td>
+                                    <span class="badge bg-<%= attraction.type === 'ride' ? 'primary' : attraction.type === 'show' ? 'success' : 'info' %>">
+                                        <%= attraction.type.charAt(0).toUpperCase() + attraction.type.slice(1) %>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Thrill Level:</strong></td>
+                                <td>
+                                    <span class="badge bg-<%= attraction.thrillLevel === 'low' ? 'success' : attraction.thrillLevel === 'medium' ? 'warning' : attraction.thrillLevel === 'high' ? 'danger' : 'dark' %>">
+                                        <%= attraction.thrillLevel.charAt(0).toUpperCase() + attraction.thrillLevel.slice(1) %>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Status:</strong></td>
+                                <td>
+                                    <span class="badge bg-<%= attraction.status === 'open' ? 'success' : attraction.status === 'closed' ? 'danger' : 'warning' %>">
+                                        <%= attraction.status.charAt(0).toUpperCase() + attraction.status.slice(1) %>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Specifications</h6>
+                        <table class="table table-sm">
+                            <tr>
+                                <td><strong>Capacity:</strong></td>
+                                <td><%= attraction.capacity %> people</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Duration:</strong></td>
+                                <td><%= attraction.duration %> minutes</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Min Height:</strong></td>
+                                <td>
+                                    <% if (attraction.minHeight) { %>
+                                        <%= attraction.minHeight %> cm
+                                    <% } else { %>
+                                        <span class="text-muted">No requirement</span>
+                                    <% } %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Created:</strong></td>
+                                <td><%= new Date(attraction.createdAt).toLocaleDateString() %></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h6>Description</h6>
+                    <p><%= attraction.description %></p>
+                </div>
+
+                <% if (attraction.features && attraction.features.length > 0) { %>
+                <div class="mt-4">
+                    <h6>Features</h6>
+                    <ul class="list-unstyled">
+                        <% attraction.features.forEach(feature => { %>
+                        <li><i class="fas fa-check text-success me-2"></i><%= feature %></li>
+                        <% }) %>
+                    </ul>
+                </div>
+                <% } %>
+
+                <% if (attraction.image) { %>
+                <div class="mt-4">
+                    <h6>Image</h6>
+                    <img src="/uploads/<%= attraction.image %>" alt="<%= attraction.name %>" 
+                         class="img-fluid rounded" style="max-height: 300px;">
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Current Status Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Live Status</h5>
+            </div>
+            <div class="card-body">
+                <% if (attraction.status === 'open') { %>
+                    <div class="text-center">
+                        <h3 class="text-success mb-3">
+                            <i class="fas fa-play-circle"></i> OPEN
+                        </h3>
+                        <div class="row">
+                            <div class="col-6">
+                                <h4 class="text-primary"><%= attraction.currentWaitTime || 0 %></h4>
+                                <small class="text-muted">Wait Time (min)</small>
+                            </div>
+                            <div class="col-6">
+                                <h4 class="text-info"><%= attraction.currentQueueLength || 0 %></h4>
+                                <small class="text-muted">In Queue</small>
+                            </div>
+                        </div>
+                    </div>
+                <% } else if (attraction.status === 'closed') { %>
+                    <div class="text-center">
+                        <h3 class="text-danger mb-3">
+                            <i class="fas fa-stop-circle"></i> CLOSED
+                        </h3>
+                        <p class="text-muted">Attraction is currently closed</p>
+                    </div>
+                <% } else { %>
+                    <div class="text-center">
+                        <h3 class="text-warning mb-3">
+                            <i class="fas fa-tools"></i> MAINTENANCE
+                        </h3>
+                        <p class="text-muted">Under maintenance</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- Quick Actions Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="/admin/reservations?attraction=<%= attraction._id %>" class="btn btn-outline-primary">
+                        <i class="fas fa-list"></i> View Reservations
+                    </a>
+                    <% if (attraction.status !== 'open') { %>
+                    <form action="/admin/attractions/<%= attraction._id %>/status" method="POST" style="display: inline;">
+                        <input type="hidden" name="status" value="open">
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fas fa-play"></i> Open Attraction
+                        </button>
+                    </form>
+                    <% } %>
+                    <% if (attraction.status !== 'closed') { %>
+                    <form action="/admin/attractions/<%= attraction._id %>/status" method="POST" style="display: inline;">
+                        <input type="hidden" name="status" value="closed">
+                        <button type="submit" class="btn btn-danger w-100">
+                            <i class="fas fa-stop"></i> Close Attraction
+                        </button>
+                    </form>
+                    <% } %>
+                    <% if (attraction.status !== 'maintenance') { %>
+                    <form action="/admin/attractions/<%= attraction._id %>/status" method="POST" style="display: inline;">
+                        <input type="hidden" name="status" value="maintenance">
+                        <button type="submit" class="btn btn-warning w-100">
+                            <i class="fas fa-tools"></i> Set Maintenance
+                        </button>
+                    </form>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Card -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-12 mb-3">
+                        <h4 class="text-primary"><%= totalReservations || 0 %></h4>
+                        <small class="text-muted">Total Reservations</small>
+                    </div>
+                    <div class="col-6">
+                        <h5 class="text-success"><%= activeReservations || 0 %></h5>
+                        <small class="text-muted">Active</small>
+                    </div>
+                    <div class="col-6">
+                        <h5 class="text-info"><%= completedReservations || 0 %></h5>
+                        <small class="text-muted">Completed</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Back Button -->
+<div class="mt-4">
+    <a href="/admin/attractions" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Attractions
+    </a>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete <strong id="attractionName"></strong>?</p>
+                <p class="text-danger">This action cannot be undone and will also delete all associated reservations.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-danger">Delete Attraction</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmDelete(attractionId, attractionName) {
+    document.getElementById('attractionName').textContent = attractionName;
+    document.getElementById('deleteForm').action = `/admin/attractions/${attractionId}`;
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+</script>
+
+<%- include('../admin-layout-end') %>

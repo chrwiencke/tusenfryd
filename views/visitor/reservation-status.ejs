@@ -1,0 +1,167 @@
+<%- include('../layout-header', { 
+    title: 'Your Reservations', 
+    user: typeof(user) !== 'undefined' ? user : null
+}) %>
+
+<nav class="mb-6" aria-label="breadcrumb">
+    <ol class="flex space-x-2 text-sm text-gray-600">
+        <li><a href="/" class="hover:text-blue-600 transition-colors">Home</a></li>
+        <li class="before:content-['/'] before:mx-2 before:text-gray-400"><a href="/check-reservation" class="hover:text-blue-600 transition-colors">Check Reservation</a></li>
+        <li class="before:content-['/'] before:mx-2 before:text-gray-400 text-gray-900 font-medium">Your Reservations</li>
+    </ol>
+</nav>
+
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-2">
+        <i class="bi bi-calendar-check text-blue-600"></i>
+        Your Reservations
+    </h1>
+    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+        <%= email %>
+    </span>
+</div>
+
+<% if (reservations.length === 0) { %>
+    <div class="text-center py-12">
+        <i class="bi bi-calendar-x text-6xl text-gray-400 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">No Active Reservations</h3>
+        <p class="text-gray-600 mb-6">You don't have any active queue reservations at the moment.</p>
+        <a href="/attractions" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
+            <i class="bi bi-star mr-2"></i>
+            Browse Attractions
+        </a>
+    </div>
+<% } else { %>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <% reservations.forEach(reservation => { %>
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div class="p-6">
+                <div class="flex items-start justify-between mb-4">
+                    <h5 class="text-lg font-semibold text-gray-900"><%= reservation.attraction.name %></h5>
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        Active
+                    </span>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <span class="text-sm text-gray-500">Queue Position</span>
+                        <div class="text-lg font-bold text-blue-600">#<%= reservation.queuePosition %></div>
+                    </div>
+                    <div>
+                        <span class="text-sm text-gray-500">Guests</span>
+                        <div class="text-lg font-bold text-gray-900"><%= reservation.numberOfGuests %></div>
+                    </div>
+                </div>
+                    
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <span class="text-sm text-gray-500">Reserved At</span>
+                        <div class="font-semibold text-gray-900">
+                            <%= new Date(reservation.reservationTime).toLocaleTimeString('en-US', { 
+                                hour: '2-digit', 
+                                minute: '2-digit',
+                                hour12: false 
+                            }) %>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-sm text-gray-500">Estimated Time</span>
+                        <div class="font-semibold text-green-600">
+                            <%= new Date(reservation.estimatedTime).toLocaleTimeString('en-US', { 
+                                hour: '2-digit', 
+                                minute: '2-digit',
+                                hour12: false 
+                            }) %>
+                        </div>
+                    </div>
+                </div>
+                
+                <% if (reservation.notes) { %>
+                <div class="mb-4">
+                    <span class="text-sm text-gray-500">Notes</span>
+                    <div class="text-gray-600 mt-1"><%= reservation.notes %></div>
+                </div>
+                <% } %>
+                    
+                <!-- Time Status -->
+                <% 
+                    const now = new Date();
+                    const estimatedTime = new Date(reservation.estimatedTime);
+                    const timeDiff = estimatedTime - now;
+                    const minutesLeft = Math.ceil(timeDiff / (1000 * 60));
+                %>
+                
+                <div class="mb-4 p-4 rounded-lg border-l-4 <%= minutesLeft <= 0 ? 'bg-green-50 border-green-400' : minutesLeft <= 15 ? 'bg-yellow-50 border-yellow-400' : 'bg-blue-50 border-blue-400' %>">
+                    <% if (minutesLeft <= 0) { %>
+                        <div class="flex items-center text-green-700">
+                            <i class="bi bi-check-circle mr-2"></i>
+                            <span class="font-semibold">Ready to ride!</span>
+                        </div>
+                        <p class="text-green-600 text-sm mt-1">You can head to the attraction now.</p>
+                    <% } else if (minutesLeft <= 15) { %>
+                        <div class="flex items-center text-yellow-700">
+                            <i class="bi bi-exclamation-triangle mr-2"></i>
+                            <span class="font-semibold">Almost ready!</span>
+                        </div>
+                        <p class="text-yellow-600 text-sm mt-1">Approximately <%= minutesLeft %> minutes remaining.</p>
+                    <% } else { %>
+                        <div class="flex items-center text-blue-700">
+                            <i class="bi bi-clock mr-2"></i>
+                            <span class="font-semibold">Please wait.</span>
+                        </div>
+                        <p class="text-blue-600 text-sm mt-1">Approximately <%= minutesLeft %> minutes remaining.</p>
+                    <% } %>
+                </div>
+                
+                <div class="w-full">
+                    <a href="/attractions/<%= reservation.attraction._id %>" class="w-full inline-flex items-center justify-center px-4 py-2 border border-blue-300 text-blue-700 bg-white hover:bg-blue-50 font-medium rounded-lg transition-colors">
+                        <i class="bi bi-info-circle mr-2"></i>
+                        View Attraction Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        <% }); %>
+    </div>
+    
+    <div class="mt-6">
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+            <h6 class="flex items-center text-lg font-semibold text-blue-900 mb-3">
+                <i class="bi bi-info-circle mr-2"></i>
+                Reservation Tips
+            </h6>
+            <ul class="space-y-2 text-blue-800 mb-0">
+                <li class="flex items-start">
+                    <span class="w-2 h-2 bg-blue-500 rounded-full mr-3 mt-2 flex-shrink-0"></span>
+                    Arrive at the attraction around your estimated time
+                </li>
+                <li class="flex items-start">
+                    <span class="w-2 h-2 bg-blue-500 rounded-full mr-3 mt-2 flex-shrink-0"></span>
+                    Show this page or provide your email to staff
+                </li>
+                <li class="flex items-start">
+                    <span class="w-2 h-2 bg-blue-500 rounded-full mr-3 mt-2 flex-shrink-0"></span>
+                    Reservations are valid for today only
+                </li>
+                <li class="flex items-start">
+                    <span class="w-2 h-2 bg-blue-500 rounded-full mr-3 mt-2 flex-shrink-0"></span>
+                    Late arrivals may need to wait or re-queue
+                </li>
+            </ul>
+        </div>
+    </div>
+<% } %>
+
+<div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+    <a href="/check-reservation" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 font-medium rounded-lg transition-colors">
+        <i class="bi bi-arrow-left mr-2"></i>
+        Check Different Email
+    </a>
+    <a href="/attractions" class="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
+        <i class="bi bi-star mr-2"></i>
+        Browse More Attractions
+    </a>
+</div>
+
+<%- include('../layout-footer') %>
