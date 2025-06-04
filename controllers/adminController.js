@@ -262,7 +262,11 @@ const getAttractionDetails = async (req, res, next) => {
     const reservations = await Reservation.find({ 
       attraction: attraction._id,
       status: { $in: ['pending', 'active'] }
-    }).sort({ position: 1 }).limit(10);
+    }).sort({ queuePosition: 1 }).limit(10);
+
+    // Calculate current wait time
+    attraction.waitTime = attraction.calculateWaitTime();
+    await attraction.save();
 
     res.render('admin/attraction-details', {
       title: `${attraction.name} - Details`,
@@ -323,7 +327,19 @@ const updateReservationStatus = async (req, res, next) => {
     const reservation = await Reservation.findById(req.params.id);
 
     if (!reservation) {
-      return res.status(404).json({ error: 'Reservation not found' });
+      return res.status(404).json({ 
+        success: false, 
+        error: 'Reservation not found' 
+      });
+    }
+
+    // Validate status
+    const validStatuses = ['active', 'completed', 'cancelled'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid status provided'
+      });
     }
 
     // If completing reservation, update queue positions
@@ -338,11 +354,39 @@ const updateReservationStatus = async (req, res, next) => {
       }
     }
 
+    // If cancelling reservation, also update queue positions and attraction count
+    if (status === 'cancelled' && reservation.status === 'active') {
+      await Reservation.updateQueuePositions(reservation.attraction, reservation.queuePosition);
+      
+      // Update attraction queue count
+      const attraction = await Attraction.findById(reservation.attraction);
+      if (attraction) {
+        attraction.currentQueue = Math.max(0, attraction.currentQueue - reservation.numberOfGuests);
+        await attraction.save();
+      }
+    }
+
     reservation.status = status;
     await reservation.save();
 
+    // Check if this is an AJAX request
+    if (req.headers.accept && req.headers.accept.includes('application/json')) {
+      return res.json({
+        success: true,
+        message: 'Reservation status updated successfully',
+        data: reservation
+      });
+    }
+
     res.redirect('/admin/reservations?success=Reservation status updated');
   } catch (error) {
+    console.error('Update reservation status error:', error);
+    if (req.headers.accept && req.headers.accept.includes('application/json')) {
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to update reservation status'
+      });
+    }
     next(error);
   }
 };
@@ -380,31 +424,21 @@ const getSettings = async (req, res, next) => {
     const totalAttractions = await Attraction.countDocuments();
     const activeReservations = await Reservation.countDocuments({ status: 'active' });
     const openAttractions = await Attraction.countDocuments({ status: 'open' });
-    const closedAttractions = await Attraction.countDocuments({ status: 'closed' });
-    const maintenanceAttractions = await Attraction.countDocuments({ status: 'maintenance' });
-    
-    // Get visitors today (reservations created today)
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const visitorsToday = await Reservation.countDocuments({
-      createdAt: { $gte: today, $lt: tomorrow }
-    });
 
-    const stats = {
-      totalAttractions,
-      activeReservations,
-      openAttractions,
-      closedAttractions,
-      maintenanceAttractions,
-      visitorsToday
-    };
+    // Convert settings to object for easier access in template
+    const settingsObj = {};
+    settings.forEach(setting => {
+      settingsObj[setting.key] = setting.value;
+    });
 
     res.render('admin/settings', {
       title: 'Park Settings',
-      settings,
-      stats,
+      settings: settingsObj,
+      stats: {
+        totalAttractions,
+        activeReservations,
+        openAttractions
+      },
       user: req.user
     });
   } catch (error) {
@@ -414,57 +448,28 @@ const getSettings = async (req, res, next) => {
 
 const updateSettings = async (req, res, next) => {
   try {
-    const { key, value, description, category } = req.body;
+    const updates = req.body;
     
-    await ParkSetting.setSetting(key, value, description, category);
-    
-    res.redirect('/admin/settings?success=Setting updated successfully');
+    for (const [key, value] of Object.entries(updates)) {
+      await ParkSetting.setSetting(key, value);
+    }
+
+    res.redirect('/admin/settings?success=Settings updated successfully');
   } catch (error) {
     next(error);
   }
 };
 
 // Notifications management
-const addNotification = async (req, res, next) => {
-  try {
-    const { message, type = 'info' } = req.body;
-    
-    await ParkSetting.setSetting(
-      `notification_${Date.now()}`,
-      { message, type },
-      'Park notification',
-      'notification'
-    );
-
-    res.redirect('/admin/dashboard?success=Notification added successfully');
-  } catch (error) {
-    next(error);
-  }
-};
-
-// Get notifications
 const getNotifications = async (req, res, next) => {
   try {
     const notifications = await ParkSetting.find({ 
-      category: 'notification' 
+      category: 'notification'
     }).sort({ createdAt: -1 });
-
-    // Calculate stats for notifications
-    const active = await ParkSetting.countDocuments({ category: 'notification', isActive: true });
-    const inactive = await ParkSetting.countDocuments({ category: 'notification', isActive: false });
-    const total = await ParkSetting.countDocuments({ category: 'notification' });
-
-    const stats = {
-      active,
-      inactive,
-      expired: 0, // ParkSetting doesn't have expiration
-      total
-    };
 
     res.render('admin/notifications', {
       title: 'Manage Notifications',
       notifications,
-      stats,
       user: req.user
     });
   } catch (error) {
@@ -472,20 +477,42 @@ const getNotifications = async (req, res, next) => {
   }
 };
 
-// Create notification
 const createNotification = async (req, res, next) => {
   try {
-    const { title, message, type = 'info', priority = 'medium' } = req.body;
+    const { title, message, type, isActive } = req.body;
     
-    const notificationKey = `notification_${Date.now()}`;
+    const notificationData = {
+      title,
+      message,
+      type: type || 'info'
+    };
+
     await ParkSetting.setSetting(
-      notificationKey,
-      { title, message, type, priority },
-      'Park notification',
+      `notification_${Date.now()}`,
+      notificationData,
+      `Notification: ${title}`,
       'notification'
     );
 
     res.redirect('/admin/notifications?success=Notification created successfully');
+  } catch (error) {
+    next(error);
+  }
+};
+
+// FAQ management
+const getFAQ = async (req, res, next) => {
+  try {
+    const faqItems = await ParkSetting.find({ 
+      category: 'faq',
+      isActive: true 
+    }).sort({ createdAt: -1 });
+
+    res.render('admin/faq', {
+      title: 'Admin FAQ',
+      faqItems,
+      user: req.user
+    });
   } catch (error) {
     next(error);
   }
@@ -508,7 +535,7 @@ module.exports = {
   getReservationDetails,
   getSettings,
   updateSettings,
-  addNotification,
   getNotifications,
-  createNotification
+  createNotification,
+  getFAQ
 };

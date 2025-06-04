@@ -504,3 +504,93 @@ document.addEventListener('DOMContentLoaded', function() {
         return new bootstrap.Popover(popoverTriggerEl);
     });
 });
+
+// Update reservation status with better error handling
+async function updateReservationStatus(reservationId, newStatus) {
+    if (!confirm(`Are you sure you want to mark this reservation as ${newStatus}?`)) {
+        return;
+    }
+
+    try {
+        showLoadingState(true);
+        
+        const response = await fetch(`/admin/reservations/${reservationId}/status`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ status: newStatus })
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+            showAlert('success', result.message || 'Reservation status updated successfully');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            showAlert('error', result.error || 'Failed to update reservation status');
+        }
+    } catch (error) {
+        console.error('Error updating reservation status:', error);
+        showAlert('error', 'An unexpected error occurred while updating the reservation');
+    } finally {
+        showLoadingState(false);
+    }
+}
+
+// Show loading state for actions
+function showLoadingState(show) {
+    const actionButtons = document.querySelectorAll('.action-btn');
+    actionButtons.forEach(btn => {
+        btn.disabled = show;
+        if (show) {
+            btn.style.opacity = '0.6';
+        } else {
+            btn.style.opacity = '1';
+        }
+    });
+}
+
+// Enhanced attraction deletion
+async function deleteAttractionWithConfirmation(attractionId, attractionName) {
+    if (!confirm(`Are you sure you want to delete "${attractionName}"?\n\nThis action cannot be undone and will also delete all associated reservations.`)) {
+        return;
+    }
+
+    try {
+        showLoadingState(true);
+        
+        const response = await fetch(`/admin/attractions/${attractionId}`, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            showAlert('success', 'Attraction deleted successfully');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            const result = await response.json();
+            showAlert('error', result.error || 'Failed to delete attraction');
+        }
+    } catch (error) {
+        console.error('Error deleting attraction:', error);
+        showAlert('error', 'An unexpected error occurred while deleting the attraction');
+    } finally {
+        showLoadingState(false);
+    }
+}
+
+// Auto-refresh for real-time data
+function initAutoRefresh() {
+    if (window.location.pathname.includes('/admin/reservations')) {
+        setInterval(() => {
+            // Only refresh if no modals are open
+            if (!document.querySelector('.modal.show')) {
+                updateReservationCounts();
+            }
+        }, 30000); // Every 30 seconds
+    }
+}

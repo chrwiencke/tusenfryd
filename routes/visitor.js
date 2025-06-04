@@ -17,4 +17,7 @@ router.post('/attractions/:id/reserve', validateReservation, visitorController.c
 // Check reservation status
 router.get('/check-reservation', visitorController.checkReservation);
 
+// FAQ page
+router.get('/faq', visitorController.getFAQ);
+
 module.exports = router;

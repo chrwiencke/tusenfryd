@@ -1,16 +1,15 @@
-    </main>
+</main>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-gray-300 py-6 mt-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                <div class="mb-4 md:mb-0">
-                    <h5 class="text-lg font-semibold mb-2">Tusenfryd Admin Panel</h5>
-                    <p class="text-gray-400">Park management system</p>
-                </div>
-                <div class="text-gray-400">
-                    <p>&copy; 2024 Tusenfryd. All rights reserved.</p>
-                </div>
+    <footer class="bg-gray-900 text-white mt-12">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <p class="text-gray-400">
+                    © 2024 Tusenfryd. All rights reserved.
+                </p>
+                <p class="text-gray-500 text-sm mt-2">
+                    Park management system
+                </p>
             </div>
         </div>
     </footer>
@@ -23,13 +22,13 @@
             mobileMenu.classList.toggle('hidden');
         });
 
-        // User menu toggle
+        // User menu dropdown
         document.getElementById('user-menu-button')?.addEventListener('click', function() {
             const userMenu = document.getElementById('user-menu');
             userMenu.classList.toggle('hidden');
         });
 
-        // Close user menu when clicking outside
+        // Close dropdowns when clicking outside
         document.addEventListener('click', function(event) {
             const userMenuButton = document.getElementById('user-menu-button');
             const userMenu = document.getElementById('user-menu');
@@ -39,26 +38,25 @@
             }
         });
 
-        // Close alert function
+        // Alert close function
         function closeAlert(alertId) {
             const alert = document.getElementById(alertId);
             if (alert) {
-                alert.style.display = 'none';
+                alert.remove();
             }
         }
 
         // Auto-hide alerts after 5 seconds
-        document.addEventListener('DOMContentLoaded', function() {
-            const alerts = document.querySelectorAll('[role="alert"]');
-            alerts.forEach(alert => {
-                setTimeout(() => {
-                    alert.style.opacity = '0';
-                    setTimeout(() => {
-                        alert.style.display = 'none';
-                    }, 300);
-                }, 5000);
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('[id$="-alert"]');
+            alerts.forEach(function(alert) {
+                alert.style.transition = 'opacity 0.5s ease';
+                alert.style.opacity = '0';
+                setTimeout(function() {
+                    alert.remove();
+                }, 500);
             });
-        });
+        }, 5000);
     </script>
     <%- typeof(additionalJS) !== 'undefined' ? additionalJS : '' %>
 </body>

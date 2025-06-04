@@ -1,7 +1,8 @@
 <%- include('../admin-layout-header', { 
     title: 'Manage Attractions', 
     pageTitle: 'Attraction Management',
-    user: user
+    user: user,
+    additionalCSS: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">'
 }) %>
 
 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
@@ -49,36 +50,42 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= attraction.capacity %> people</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             <% if (attraction.status === 'open') { %>
-                                <%= attraction.currentWaitTime || 0 %> min
+                                <%= attraction.waitTime || 0 %> min
                             <% } else { %>
                                 <span class="text-gray-500">N/A</span>
-                        <% } %>
-                    </td>
-                    <td>
-                        <% if (attraction.status === 'open') { %>
-                            <%= attraction.currentQueueLength || 0 %> people
-                        <% } else { %>
-                            <span class="text-muted">N/A</span>
-                        <% } %>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex space-x-2">
-                            <a href="/admin/attractions/<%= attraction._id %>" class="text-blue-600 hover:text-blue-900 p-1 rounded" title="View Details">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="/admin/attractions/<%= attraction._id %>/edit" class="text-yellow-600 hover:text-yellow-900 p-1 rounded" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <button class="text-red-600 hover:text-red-900 p-1 rounded" title="Delete" 
-                                    onclick="confirmDelete('<%= attraction._id %>', '<%= attraction.name %>')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                <% }) %>
-            </tbody>
-        </table>
+                            <% } %>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <% if (attraction.status === 'open') { %>
+                                <%= attraction.currentQueue || 0 %> people
+                            <% } else { %>
+                                <span class="text-gray-500">N/A</span>
+                            <% } %>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="action-buttons">
+                                <a href="/admin/attractions/<%= attraction._id %>" 
+                                   class="action-btn action-btn-view"
+                                   title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="/admin/attractions/<%= attraction._id %>/edit" 
+                                   class="action-btn action-btn-edit"
+                                   title="Edit Attraction">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button onclick="confirmDelete('<%= attraction._id %>', '<%= attraction.name %>')" 
+                                        class="action-btn action-btn-delete"
+                                        title="Delete Attraction">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
     </div>
 <% } else { %>
     <div class="text-center py-12">
@@ -101,8 +108,15 @@
             </button>
         </div>
         <div class="p-6">
-            <p class="text-gray-700 mb-3">Are you sure you want to delete <strong id="attractionName" class="text-gray-900"></strong>?</p>
-            <p class="text-red-600 text-sm">This action cannot be undone and will also delete all associated reservations.</p>
+            <div class="flex items-start">
+                <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-gray-700 mb-3">Are you sure you want to delete <strong id="attractionName" class="text-gray-900"></strong>?</p>
+                    <p class="text-red-600 text-sm">This action cannot be undone and will also delete all associated reservations.</p>
+                </div>
+            </div>
         </div>
         <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-200">
             <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
@@ -133,6 +147,16 @@ function closeDeleteModal() {
 document.getElementById('deleteModal').addEventListener('click', function(e) {
     if (e.target === this) {
         closeDeleteModal();
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const modal = document.getElementById('deleteModal');
+        if (modal && !modal.classList.contains('hidden')) {
+            closeDeleteModal();
+        }
     }
 });
 </script>

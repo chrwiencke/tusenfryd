@@ -1,6 +1,7 @@
 <%- include('../admin-layout-header', { 
     title: 'Manage Reservations', 
-    pageTitle: 'Reservation Management'
+    pageTitle: 'Reservation Management',
+    user: user
 }) %>
 
 <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
@@ -79,13 +80,13 @@
                             <code class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-sm">#<%= reservation.reservationId %></code>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="text-sm font-medium text-gray-900"><%= reservation.visitorName %></div>
+                            <div class="text-sm font-medium text-gray-900"><%= reservation.guestName %></div>
                             <div class="text-sm text-gray-500">
-                                <i class="fas fa-envelope mr-1"></i><%= reservation.visitorEmail %>
+                                <i class="fas fa-envelope mr-1"></i><%= reservation.guestEmail %>
                             </div>
-                            <% if (reservation.visitorPhone) { %>
+                            <% if (reservation.guestPhone) { %>
                                 <div class="text-sm text-gray-500">
-                                    <i class="fas fa-phone mr-1"></i><%= reservation.visitorPhone %>
+                                    <i class="fas fa-phone mr-1"></i><%= reservation.guestPhone %>
                                 </div>
                             <% } %>
                         </td>
@@ -95,9 +96,9 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
-                                <%= reservation.status === 'waiting' ? 'bg-orange-100 text-orange-800' : 
-                                    reservation.status === 'active' ? 'bg-green-100 text-green-800' : 
-                                    reservation.status === 'completed' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800' %>">
+                                <%= reservation.status === 'active' ? 'bg-green-100 text-green-800' : 
+                                    reservation.status === 'completed' ? 'bg-blue-100 text-blue-800' : 
+                                    reservation.status === 'cancelled' ? 'bg-red-100 text-red-800' : 'bg-orange-100 text-orange-800' %>">
                                 <%= reservation.status.charAt(0).toUpperCase() + reservation.status.slice(1) %>
                             </span>
                         </td>
@@ -115,28 +116,33 @@
                             <%= new Date(reservation.createdAt).toLocaleString() %>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <i class="fas fa-users mr-1"></i><%= reservation.partySize %>
+                            <i class="fas fa-users mr-1"></i><%= reservation.numberOfGuests %>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex space-x-2">
-                                <a href="/admin/reservations/<%= reservation._id %>" class="text-blue-600 hover:text-blue-900" title="View Details">
+                            <div class="action-buttons">
+                                <a href="/admin/reservations/<%= reservation._id %>" 
+                                   class="action-btn action-btn-view"
+                                   title="View Details">
                                     <i class="fas fa-eye"></i>
                                 </a>
                                 <% if (reservation.status === 'waiting') { %>
-                                    <button class="text-green-600 hover:text-green-900" title="Mark as Active" 
-                                            onclick="updateStatus('<%= reservation._id %>', 'active')">
+                                    <button onclick="updateStatus('<%= reservation._id %>', 'active')" 
+                                            class="action-btn action-btn-edit"
+                                            title="Activate Reservation">
                                         <i class="fas fa-play"></i>
                                     </button>
                                 <% } %>
                                 <% if (reservation.status === 'active') { %>
-                                    <button class="text-blue-600 hover:text-blue-900" title="Mark as Completed" 
-                                            onclick="updateStatus('<%= reservation._id %>', 'completed')">
+                                    <button onclick="updateStatus('<%= reservation._id %>', 'completed')" 
+                                            class="action-btn action-btn-edit"
+                                            title="Complete Reservation">
                                         <i class="fas fa-check"></i>
                                     </button>
                                 <% } %>
                                 <% if (reservation.status === 'waiting' || reservation.status === 'active') { %>
-                                    <button class="text-red-600 hover:text-red-900" title="Cancel" 
-                                            onclick="updateStatus('<%= reservation._id %>', 'cancelled')">
+                                    <button onclick="updateStatus('<%= reservation._id %>', 'cancelled')" 
+                                            class="action-btn action-btn-delete"
+                                            title="Cancel Reservation">
                                         <i class="fas fa-times"></i>
                                     </button>
                                 <% } %>

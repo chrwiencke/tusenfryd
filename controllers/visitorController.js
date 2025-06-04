@@ -223,11 +223,23 @@ const checkReservation = async (req, res, next) => {
   }
 };
 
+// Show FAQ page
+const getFAQ = async (req, res, next) => {
+  try {
+    res.render('visitor/faq', {
+      title: 'Frequently Asked Questions - Tusenfryd'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getHomepage,
   searchAttractions,
   getAttractionDetails,
   showReservationForm,
   createReservation,
-  checkReservation
+  checkReservation,
+  getFAQ
 };

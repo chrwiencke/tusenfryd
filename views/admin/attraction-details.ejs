@@ -1,20 +1,162 @@
 <%- include('../admin-layout-header', {
-    title: 'All Attractions - Tusenfryd Admin',
-    pageTitle: 'All Attractions',
+    title: `${attraction.name} - Details`,
+    pageTitle: `${attraction.name}`,
     user: user
 }) %>
 
-<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-800">All Attractions</h1>
-        <a href="/admin/attractions/new" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold text-sm rounded-lg shadow-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-            <i class="fas fa-plus mr-2"></i> Add New Attraction
-        </a>
+<div class="max-w-6xl mx-auto">
+    <!-- Attraction Overview Card -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <h4 class="text-xl font-semibold text-gray-900">Attraction Details</h4>
+            <div class="flex space-x-2">
+                <a href="/admin/attractions/<%= attraction._id %>/edit" class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-600 border border-transparent rounded-lg hover:bg-yellow-700 transition-colors">
+                    <i class="fas fa-edit mr-2"></i>
+                    Edit Attraction
+                </a>
+                <a href="/admin/attractions" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to List
+                </a>
+            </div>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Attraction Image -->
+                <div class="lg:col-span-1">
+                    <% if (attraction.image) { %>
+                        <img src="<%= attraction.image %>" alt="<%= attraction.name %>" class="w-full h-64 object-cover rounded-lg">
+                    <% } else { %>
+                        <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-image text-gray-400 text-4xl"></i>
+                        </div>
+                    <% } %>
+                </div>
+                
+                <!-- Attraction Info -->
+                <div class="lg:col-span-2">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Name</label>
+                            <p class="mt-1 text-sm text-gray-900"><%= attraction.name %></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Category</label>
+                            <p class="mt-1 text-sm text-gray-900">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    <%= attraction.category ? attraction.category.charAt(0).toUpperCase() + attraction.category.slice(1).replace('-', ' ') : 'N/A' %>
+                                </span>
+                            </p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Status</label>
+                            <p class="mt-1 text-sm text-gray-900">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium <%= attraction.status === 'open' ? 'bg-green-100 text-green-800' : attraction.status === 'closed' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800' %>">
+                                    <%= attraction.status ? attraction.status.charAt(0).toUpperCase() + attraction.status.slice(1) : 'Unknown' %>
+                                </span>
+                            </p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Capacity</label>
+                            <p class="mt-1 text-sm text-gray-900"><%= attraction.capacity || 0 %> people</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Current Wait Time</label>
+                            <p class="mt-1 text-sm text-gray-900">
+                                <% if (attraction.status === 'open') { %>
+                                    <span class="font-semibold <%= (attraction.waitTime || 0) > 30 ? 'text-red-600' : (attraction.waitTime || 0) > 15 ? 'text-yellow-600' : 'text-green-600' %>">
+                                        <%= attraction.waitTime || 0 %> minutes
+                                    </span>
+                                <% } else { %>
+                                    <span class="text-gray-500">N/A</span>
+                                <% } %>
+                            </p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Queue Length</label>
+                            <p class="mt-1 text-sm text-gray-900">
+                                <% if (attraction.status === 'open') { %>
+                                    <%= attraction.currentQueue || 0 %> people
+                                <% } else { %>
+                                    <span class="text-gray-500">N/A</span>
+                                <% } %>
+                            </p>
+                        </div>
+                        <% if (attraction.heightRequirement) { %>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Height Requirement</label>
+                            <p class="mt-1 text-sm text-gray-900"><%= attraction.heightRequirement %> cm minimum</p>
+                        </div>
+                        <% } %>
+                        <% if (attraction.openingHours) { %>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Operating Hours</label>
+                            <p class="mt-1 text-sm text-gray-900"><%= attraction.openingHours.start || '10:00' %> - <%= attraction.openingHours.end || '22:00' %></p>
+                        </div>
+                        <% } %>
+                    </div>
+                    
+                    <% if (attraction.description) { %>
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-700">Description</label>
+                        <p class="mt-1 text-sm text-gray-900"><%= attraction.description %></p>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
+    <!-- Current Reservations -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h5 class="text-lg font-semibold text-gray-900">Current Reservations</h5>
+        </div>
+        <div class="p-6">
+            <% if (reservations && reservations.length > 0) { %>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Guest</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Party Size</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reserved At</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <% reservations.forEach(reservation => { %>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900"><%= reservation.guestName %></div>
+                                    <div class="text-sm text-gray-500"><%= reservation.guestEmail %></div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= reservation.numberOfGuests %> people</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#<%= reservation.queuePosition || 'N/A' %></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <%= new Date(reservation.createdAt).toLocaleString() %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium <%= reservation.status === 'active' ? 'bg-green-100 text-green-800' : reservation.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800' %>">
+                                        <%= reservation.status ? reservation.status.charAt(0).toUpperCase() + reservation.status.slice(1) : 'Unknown' %>
+                                    </span>
+                                </td>
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <div class="text-center py-12">
+                    <i class="fas fa-calendar-times text-4xl text-gray-400 mb-4"></i>
+                    <h4 class="text-lg font-semibold text-gray-600 mb-2">No Active Reservations</h4>
+                    <p class="text-gray-500">There are currently no reservations for this attraction.</p>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
                 <thead class="bg-gray-800">
                     <tr>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Name</th>

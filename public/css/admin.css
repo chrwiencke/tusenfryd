@@ -15,6 +15,62 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.action-btn:hover {
+    transform: translateY(-1px);
+    text-decoration: none;
+}
+
+.action-btn-view {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.action-btn-view:hover {
+    background-color: #2563eb;
+    color: white;
+}
+
+.action-btn-edit {
+    background-color: #f59e0b;
+    color: white;
+}
+
+.action-btn-edit:hover {
+    background-color: #d97706;
+    color: white;
+}
+
+.action-btn-delete {
+    background-color: #ef4444;
+    color: white;
+}
+
+.action-btn-delete:hover {
+    background-color: #dc2626;
+    color: white;
+}
+
 /* Navigation */
 .navbar-dark .navbar-brand {
     font-weight: 700;

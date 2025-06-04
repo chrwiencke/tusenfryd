@@ -1,0 +1,49 @@
+<%- include('../admin-layout-header', {
+    title: 'Admin FAQ',
+    pageTitle: 'Frequently Asked Questions',
+    user: user
+}) %>
+
+<div class="max-w-4xl mx-auto">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4 sm:mb-0">Admin FAQ</h2>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="p-6">
+            <div class="space-y-6">
+                <div class="border-b border-gray-200 pb-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">How do I add a new attraction?</h3>
+                    <p class="text-gray-600">Navigate to the Attractions page and click "Add New Attraction". Fill in all required fields including name, category, description, capacity, and status.</p>
+                </div>
+
+                <div class="border-b border-gray-200 pb-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">How do I edit an existing attraction?</h3>
+                    <p class="text-gray-600">Go to the Attractions page, find the attraction you want to edit, and click the yellow "Edit" button in the Actions column.</p>
+                </div>
+
+                <div class="border-b border-gray-200 pb-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">How do I delete an attraction?</h3>
+                    <p class="text-gray-600">On the Attractions page, click the red "Delete" button for the attraction you want to remove. A confirmation dialog will appear. Note: This will also cancel all associated reservations.</p>
+                </div>
+
+                <div class="border-b border-gray-200 pb-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">How do I manage reservations?</h3>
+                    <p class="text-gray-600">Use the Reservations page to view, filter, and update reservation statuses. You can filter by status (active, completed, cancelled) and by specific attractions.</p>
+                </div>
+
+                <div class="border-b border-gray-200 pb-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">How do I create notifications for visitors?</h3>
+                    <p class="text-gray-600">Go to the Notifications page and click "Create Notification". Add a title, message, select the type (info, warning, alert), and choose whether it should be active.</p>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">How do I update park settings?</h3>
+                    <p class="text-gray-600">Visit the Settings page to update park information, operating hours, and reservation settings. Changes are saved immediately upon form submission.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../admin-layout-footer') %>

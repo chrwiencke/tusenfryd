@@ -1,0 +1,423 @@
+<%- include('../layout-header', { 
+    title: 'Frequently Asked Questions'
+}) %>
+
+<div class="max-w-4xl mx-auto">
+    <!-- Header Section -->
+    <div class="text-center mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <i class="bi bi-question-circle text-primary-600 mr-3"></i>
+            Vanlige spørsmål
+        </h1>
+        <p class="text-lg text-gray-600">Finn svar på de mest stilte spørsmålene om Tusenfryd</p>
+    </div>
+
+    <!-- Quick Navigation -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Finn svar på:</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <a href="#reservations" class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                <i class="bi bi-calendar-check text-primary-600 mr-3"></i>
+                <span class="font-medium">Reservasjoner</span>
+            </a>
+            <a href="#attractions" class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                <i class="bi bi-star text-green-600 mr-3"></i>
+                <span class="font-medium">Attraksjoner</span>
+            </a>
+            <a href="#tickets" class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                <i class="bi bi-ticket-perforated text-blue-600 mr-3"></i>
+                <span class="font-medium">Billetter</span>
+            </a>
+            <a href="#safety" class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                <i class="bi bi-shield-check text-red-600 mr-3"></i>
+                <span class="font-medium">Sikkerhet</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- FAQ Sections -->
+    <div class="space-y-8">
+        
+        <!-- Reservations Section -->
+        <div id="reservations" class="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200 bg-primary-50">
+                <h2 class="text-xl font-bold text-primary-800 flex items-center">
+                    <i class="bi bi-calendar-check mr-3"></i>
+                    Køreservasjoner
+                </h2>
+            </div>
+            <div class="p-6 space-y-6">
+                
+                <div class="border-l-4 border-primary-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Hvordan reserverer jeg plass i kø?</h3>
+                    <div class="text-gray-700 space-y-3">
+                        <p><strong>Steg 1:</strong> Gå til attraksjonen du ønsker å oppleve</p>
+                        <p><strong>Steg 2:</strong> Klikk "Reserve Queue Spot" knappen</p>
+                        <p><strong>Steg 3:</strong> Fyll ut dine kontaktopplysninger</p>
+                        <p><strong>Steg 4:</strong> Velg antall personer i gruppen</p>
+                        <p><strong>Steg 5:</strong> Bekreft reservasjonen</p>
+                        <div class="bg-primary-50 border border-primary-200 rounded-lg p-4 mt-3">
+                            <p class="text-primary-800"><strong>Tips:</strong> Du får en estimert tid for når du kan komme tilbake til attraksjonen!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-l-4 border-green-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Hvor finner jeg mine reservasjoner?</h3>
+                    <div class="text-gray-700 space-y-2">
+                        <p>Gå til "Check Reservation" siden og skriv inn din e-postadresse.</p>
+                        <p>Du kan også klikke på lenken i bekreftelsesmeldingen du fikk.</p>
+                        <p><strong>Merk:</strong> Reservasjoner er kun gyldig samme dag som de er laget.</p>
+                    </div>
+                </div>
+
+                <div class="border-l-4 border-yellow-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Kan jeg kansellere en reservasjon?</h3>
+                    <div class="text-gray-700 space-y-2">
+                        <p>Reservasjoner kanselleres automatisk hvis:</p>
+                        <ul class="list-disc ml-6 space-y-1">
+                            <li>Du ikke møter opp innen 30 minutter etter estimert tid</li>
+                            <li>Attraksjonen stenges uventet</li>
+                            <li>Parken stenger for dagen</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border-l-4 border-red-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Hva skjer hvis jeg kommer for sent?</h3>
+                    <div class="text-gray-700 space-y-2">
+                        <p>Hvis du kommer mer enn 30 minutter for sent, må du dessverre stille deg i vanlig kø.</p>
+                        <p><strong>Råd:</strong> Kom 5-10 minutter før din estimerte tid for best opplevelse.</p>
+                    </div>
+                </div>
+
+                <div class="border-l-4 border-purple-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Hvor mange kan jeg reservere for?</h3>
+                    <div class="text-gray-700 space-y-2">
+                        <p>Du kan reservere for opptil 10 personer per reservasjon.</p>
+                        <p>Alle i gruppen må være til stede når dere ankommer attraksjonen.</p>
+                        <p><strong>Tips:</strong> Store grupper kan dele seg opp i flere reservasjoner hvis nødvendig.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attractions Section -->
+        <div id="attractions" class="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200 bg-green-50">
+                <h2 class="text-xl font-bold text-green-800 flex items-center">
+                    <i class="bi bi-star mr-3"></i>
+                    Attraksjoner og ventetider
+                </h2>
+            </div>
+            <div class="p-6 space-y-6">
+                
+                <div class="border-l-4 border-green-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Hvor nøyaktige er ventetidene?</h3>
+                    <div class="text-gray-700 space-y-3">
+                        <p>Ventetidene oppdateres automatisk hvert minutt basert på:</p>
+                        <ul class="list-disc ml-6 space-y-1">
+                            <li><strong>Aktuelle køer:</strong> Antall personer som venter</li>
+                            <li><strong>Kapasitet:</strong> Hvor mange som kan ta attraksjonen samtidig</li>
+                            <li><strong>Historiske data:</strong> Tidligere data fra lignende dager</li>
+                            <li><strong>Operasjonelle forhold:</strong> Værforhold og teknisk status</li>
+                        </ul>
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mt-3">
+                            <p><strong>Merk:</strong> Ventetider er estimater og kan variere avhengig av forhold som været og tekniske problemer.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Hva betyr de forskjellige statusene?</h3>
+                    <div class="text-gray-700 space-y-3">
+                        <div class="space-y-3">
+                            <div class="flex items-center space-x-3">
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium flex items-center space-x-1">
+                                    <i class="bi bi-check-circle"></i>
+                                    <span>Åpen</span>
+                                </span>
+                                <span>Attraksjonen er i drift og tar imot gjester</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium flex items-center space-x-1">
+                                    <i class="bi bi-x-circle"></i>
+                                    <span>Stengt</span>
+                                </span>
+                                <span>Attraksjonen er midlertidig stengt (vær, pause, eller andre årsaker)</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium flex items-center space-x-1">
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                    <span>Vedlikehold</span>
+                                </span>
+                                <span>Attraksjonen er under teknisk vedlikehold eller reparasjon</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-l-4 border-purple-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Hvilke attraksjoner kan jeg reservere?</h3>
+                    <div class="text-gray-700 space-y-2">
+                        <p>Du kan kun reservere plass på attraksjoner som:</p>
+                        <ul class="list-disc ml-6 space-y-1">
+                            <li>Er markert som "Åpen"</li>
+                            <li>Har ventetid på 15 minutter eller mer</li>
+                            <li>Støtter køreservasjonssystemet</li>
+                            <li>Ikke er under vedlikehold</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border-l-4 border-orange-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Hva skjer hvis en attraksjon går ned mens jeg venter?</h3>
+                    <div class="text-gray-700 space-y-2">
+                        <p>Hvis en attraksjon må stenges uventet:</p>
+                        <ul class="list-disc ml-6 space-y-1">
+                            <li>Du får automatisk beskjed på e-post</li>
+                            <li>Reservasjonen kanselleres og du kan reservere på andre attraksjoner</li>
+                            <li>Hvis attraksjonen åpner igjen samme dag, kan du reservere på nytt</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tickets Section -->
+        <div id="tickets" class="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200 bg-blue-50">
+                <h2 class="text-xl font-bold text-blue-800 flex items-center">
+                    <i class="bi bi-ticket-perforated mr-3"></i>
+                    Billetter og inngang
+                </h2>
+            </div>
+            <div class="p-6 space-y-6">
+                
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Trenger jeg billett for å reservere køplass?</h3>
+                    <div class="text-gray-700 space-y-2">
+                        <p><strong>Ja!</strong> Du må ha gyldig inngangsbilett til Tusenfryd før du kan reservere køplass.</p>
+                        <p>Køreservasjonssystemet er en gratis tilleggstjeneste for billettinnehavere.</p>
+                        <p><strong>Merk:</strong> Systemet verifiserer ikke billetter automatisk, men du må vise gyldig bilett ved attraksjonen.</p>
+                    </div>
+                </div>
+
+                <div class="border-l-4 border-green-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Hvor kjøper jeg billetter?</h3>
+                    <div class="text-gray-700 space-y-2">
+                        <p>Billetter kan kjøpes:</p>
+                        <ul class="list-disc ml-6 space-y-1">
+                            <li><strong>Online:</strong> tusenfryd.no (anbefales for best pris)</li>
+                            <li><strong>Ved porten:</strong> Billettluken ved hovedinngangen</li>
+                            <li><strong>Autoriserte forhandlere:</strong> Se fullstendig liste på nettsiden</li>
+                        </ul>
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-4 mt-3">
+                            <p class="text-green-800"><strong>Tips:</strong> Kjøp billetter på forhånd online for å spare tid og penger!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-l-4 border-yellow-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Gjelder reservasjoner for alle billettyper?</h3>
+                    <div class="text-gray-700 space-y-2">
+                        <p>Køreservasjonssystemet er tilgjengelig for:</p>
+                        <ul class="list-disc ml-6 space-y-1">
+                            <li><strong>Enkeltdagsbilletter:</strong> Alle typer dagsbilletter</li>
+                            <li><strong>Sesongkort:</strong> Alle typer årskort og sesongkort</li>
+                            <li><strong>Gruppebilletter:</strong> Billetter kjøpt for grupper</li>
+                            <li><strong>Rabattbilletter:</strong> Student-, barn- og seniorrabatt</li>
+                        </ul>
+                        <p><strong>Merk:</strong> Noen spesielle arrangementer kan ha egne regler for reservasjoner.</p>
+                    </div>
+                </div>
+
+                <div class="border-l-4 border-indigo-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Kan jeg reservere før jeg kommer til parken?</h3>
+                    <div class="text-gray-700 space-y-2">
+                        <p><strong>Nei,</strong> reservasjoner kan kun gjøres når du er i parken med gyldig billett.</p>
+                        <p>Dette sikrer at kun betalende gjester kan reservere, og gir mer nøyaktige ventetider.</p>
+                        <p><strong>Tips:</strong> Planlegg dagen din ved å sjekke åpningstider og attraksjoner på forhånd på nettsiden.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Safety Section -->
+        <div id="safety" class="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200 bg-red-50">
+                <h2 class="text-xl font-bold text-red-800 flex items-center">
+                    <i class="bi bi-shield-check mr-3"></i>
+                    Sikkerhet og høydekrav
+                </h2>
+            </div>
+            <div class="p-6 space-y-6">
+                
+                <div class="border-l-4 border-red-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Hvilke høydekrav gjelder for attraksjonene?</h3>
+                    <div class="text-gray-700 space-y-3">
+                        <p>Høydekravene varierer per attraksjon og vises på hver attraksjonsside:</p>
+                        <ul class="list-disc ml-6 space-y-1">
+                            <li><strong>Familieattraksjoner:</strong> Ofte ingen høydekrav eller 90-110 cm</li>
+                            <li><strong>Trill-attraksjoner:</strong> Vanligvis 120-140 cm</li>
+                            <li><strong>Extreme-attraksjoner:</strong> Ofte 140+ cm</li>
+                            <li><strong>Vannattraksjoner:</strong> Varierer, ofte 110-130 cm</li>
+                        </ul>
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4 mt-3">
+                            <p class="text-red-800"><strong>Viktig:</strong> Høydekrav kontrolleres ved attraksjonen, ikke ved reservasjon. Medta målestokk for barn nær grensen.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-l-4 border-orange-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Kan jeg reservere for barn under høydekravet?</h3>
+                    <div class="text-gray-700 space-y-2">
+                        <p>Du kan reservere, men barnet vil ikke få kjøre hvis det ikke oppfyller høydekravet ved ankomst.</p>
+                        <p><strong>Råd:</strong> Sjekk høydekravene nøye på attraksjonsdetaljsiden før du reserverer.</p>
+                        <p><strong>Alternativ:</strong> Velg familievennlige attraksjoner som passer barnets høyde.</p>
+                    </div>
+                </div>
+
+                <div class="border-l-4 border-green-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Hva skjer hvis attraksjonen stenges av sikkerhetsgrunner?</h3>
+                    <div class="text-gray-700 space-y-2">
+                        <p>Hvis en attraksjon må stenges uventet på grunn av sikkerhet:</p>
+                        <ul class="list-disc ml-6 space-y-1">
+                            <li><strong>Umiddelbar stengning:</strong> Alle reservasjoner kanselleres automatisk</li>
+                            <li><strong>E-postvarsel:</strong> Du får beskjed på den registrerte e-postadressen</li>
+                            <li><strong>Alternative muligheter:</strong> Du kan reservere på andre åpne attraksjoner</li>
+                            <li><strong>Gjenåpning:</strong> Hvis attraksjonen åpner igjen samme dag, kan du reservere på nytt</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border-l-4 border-purple-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Er det sikkerhetskrav jeg bør vite om?</h3>
+                    <div class="text-gray-700 space-y-2">
+                        <p>Ja, vær oppmerksom på følgende sikkerhetskrav:</p>
+                        <ul class="list-disc ml-6 space-y-1">
+                            <li><strong>Graviditet:</strong> Gravide bør unngå visse attraksjoner</li>
+                            <li><strong>Helseproblemer:</strong> Personer med hjerte-, nakke- eller ryggproblemer bør være forsiktige</li>
+                            <li><strong>Gjenstandsrestriksjoner:</strong> Løse gjenstander må sikres eller oppbevares</li>
+                            <li><strong>Følg instruksjoner:</strong> Lytt til sikkerhetsinstruksjoner fra personalet</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Park Information Section -->
+        <div id="park-info" class="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200 bg-indigo-50">
+                <h2 class="text-xl font-bold text-indigo-800 flex items-center">
+                    <i class="bi bi-info-circle mr-3"></i>
+                    Parkinformasjon
+                </h2>
+            </div>
+            <div class="p-6 space-y-6">
+                
+                <div class="border-l-4 border-indigo-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Når er parken åpen?</h3>
+                    <div class="text-gray-700 space-y-2">
+                        <p>Tusenfryd er åpen fra mai til oktober, med varierende åpningstider:</p>
+                        <ul class="list-disc ml-6 space-y-1">
+                            <li><strong>Høysesong (juni-august):</strong> Daglig 10:00-22:00</li>
+                            <li><strong>Vår/høst:</strong> Helger og ferier, 10:00-18:00</li>
+                            <li><strong>Spesielle arrangementer:</strong> Se nettsiden for oppdatert informasjon</li>
+                        </ul>
+                        <p><strong>Tips:</strong> Sjekk alltid åpningstider på tusenfryd.no før besøket.</p>
+                    </div>
+                </div>
+
+                <div class="border-l-4 border-green-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Hvor lenge holder en reservasjon?</h3>
+                    <div class="text-gray-700 space-y-2">
+                        <p><strong>Reservasjoner er gyldig kun for den dagen de er laget.</strong></p>
+                        <p>Du må møte opp innen 30 minutter etter din estimerte tid, ellers forfaller reservasjonen.</p>
+                        <p><strong>Merk:</strong> Du kan ikke overføre reservasjoner til andre dager eller personer.</p>
+                    </div>
+                </div>
+
+                <div class="border-l-4 border-yellow-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Kan jeg få refusjon hvis en attraksjon er stengt?</h3>
+                    <div class="text-gray-700 space-y-2">
+                        <p>Køreservasjoner er gratis, så det er ingen refusjon å gi for kansellerte reservasjoner.</p>
+                        <p>For billettrefusjon ved parkstengning eller større problemer, se våre <strong>generelle vilkår</strong> på nettsiden.</p>
+                        <p><strong>Alternativ:</strong> Du kan alltid reservere på andre åpne attraksjoner.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Help Section -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                    <i class="bi bi-headset mr-3"></i>
+                    Trenger du mer hjelp?
+                </h2>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="text-center">
+                        <div class="bg-primary-100 rounded-full p-4 inline-block mb-3">
+                            <i class="bi bi-chat-dots text-2xl text-primary-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 mb-2">Chat med oss</h3>
+                        <p class="text-gray-600 text-sm mb-3">Få rask hjelp fra vårt kundeservice-team</p>
+                        <button class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors">
+                            Start chat
+                        </button>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="bg-green-100 rounded-full p-4 inline-block mb-3">
+                            <i class="bi bi-telephone text-2xl text-green-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 mb-2">Ring oss</h3>
+                        <p class="text-gray-600 text-sm mb-3">Snakk direkte med vårt team</p>
+                        <a href="tel:+4764976497" class="text-green-600 font-medium text-lg">+47 64 97 64 97</a>
+                        <p class="text-gray-500 text-sm mt-1">Man-søn: 09:00-18:00</p>
+                    </div>
+                </div>
+                
+                <div class="mt-8 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                    <h4 class="font-semibold text-gray-900 mb-2">Fant du ikke svaret du lette etter?</h4>
+                    <p class="text-gray-600 text-sm mb-3">Send oss en e-post så svarer vi så raskt vi kan.</p>
+                    <a href="mailto:info@tusenfryd.no" class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium">
+                        <i class="bi bi-envelope mr-2"></i>
+                        info@tusenfryd.no
+                    </a>
+                </div>
+
+                <!-- Quick Tips Section -->
+                <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-blue-900 mb-3 flex items-center">
+                        <i class="bi bi-lightbulb mr-2"></i>
+                        Nyttige tips for første gangs besøkende
+                    </h4>
+                    <ul class="text-blue-800 space-y-2 text-sm">
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-blue-500 rounded-full mr-3 mt-2 flex-shrink-0"></span>
+                            <span><strong>Last ned appen:</strong> Hold deg oppdatert på ventetider og attraksjoner</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-blue-500 rounded-full mr-3 mt-2 flex-shrink-0"></span>
+                            <span><strong>Kom tidlig:</strong> Kortere køer de første timene parken er åpen</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-blue-500 rounded-full mr-3 mt-2 flex-shrink-0"></span>
+                            <span><strong>Planlegg dagen:</strong> Sjekk parkkartet og prioriter attraksjonene du vil oppleve</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-blue-500 rounded-full mr-3 mt-2 flex-shrink-0"></span>
+                            <span><strong>Værklær:</strong> Kle deg etter værmeldingen, mange attraksjoner er utendørs</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../layout-footer') %>
