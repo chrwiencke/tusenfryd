@@ -147,9 +147,14 @@ const createReservation = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       const attraction = await Attraction.findById(req.params.id);
+      const queueCount = await Reservation.countDocuments({
+        attraction: attraction._id,
+        status: 'active'
+      });
       return res.status(400).render('visitor/reservation-form', {
         title: `Reserve - ${attraction.name}`,
         attraction,
+        queueCount,
         errors: errors.array(),
         formData: req.body
       });

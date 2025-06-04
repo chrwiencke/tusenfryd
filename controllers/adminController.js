@@ -8,7 +8,7 @@ const { validationResult } = require('express-validator');
 // Login page
 const showLogin = (req, res) => {
   if (req.user) {
-    return res.redirect('/admin/dashboard');
+    return res.redirect('/admin/');
   }
   res.render('admin/login', {
     title: 'Admin Login'
@@ -28,9 +28,24 @@ const login = async (req, res, next) => {
     }
 
     const { username, password } = req.body;
+    console.log('Login attempt:', { username, password });
+    
     const user = await User.findOne({ username, isActive: true });
-
-    if (!user || !(await user.comparePassword(password))) {
+    console.log('User found:', user ? 'Yes' : 'No');
+    
+    if (user) {
+      console.log('Stored password hash:', user.password);
+      const passwordMatch = await user.comparePassword(password);
+      console.log('Password comparison result:', passwordMatch);
+      
+      if (!passwordMatch) {
+        return res.status(401).render('admin/login', {
+          title: 'Admin Login',
+          errors: [{ msg: 'Invalid username or password' }],
+          formData: req.body
+        });
+      }
+    } else {
       return res.status(401).render('admin/login', {
         title: 'Admin Login',
         errors: [{ msg: 'Invalid username or password' }],
@@ -39,24 +54,56 @@ const login = async (req, res, next) => {
     }
 
     // Update last login
-    user.lastLogin = new Date();
-    await user.save();
+    console.log('Updating last login...');
+    try {
+      user.lastLogin = new Date();
+      await user.save();
+      console.log('Last login updated successfully');
+    } catch (saveError) {
+      console.error('Error updating last login:', saveError);
+      throw saveError;
+    }
 
     // Generate JWT
-    const token = jwt.sign(
-      { userId: user._id, username: user.username },
-      process.env.JWT_SECRET,
-      { expiresIn: '8h' }
-    );
+    console.log('Generating JWT token...');
+    let token;
+    try {
+      if (!process.env.JWT_SECRET) {
+        throw new Error('JWT_SECRET is not defined in environment variables');
+      }
+      token = jwt.sign(
+        { userId: user._id, username: user.username },
+        process.env.JWT_SECRET,
+        { expiresIn: '8h' }
+      );
+      console.log('JWT token generated successfully');
+    } catch (jwtError) {
+      console.error('Error generating JWT token:', jwtError);
+      throw jwtError;
+    }
 
-    res.cookie('authToken', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 8 * 60 * 60 * 1000 // 8 hours
-    });
+    console.log('Setting auth cookie...');
+    try {
+      res.cookie('authToken', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 8 * 60 * 60 * 1000 // 8 hours
+      });
+      console.log('Auth cookie set successfully');
+    } catch (cookieError) {
+      console.error('Error setting cookie:', cookieError);
+      throw cookieError;
+    }
 
-    res.redirect('/admin/dashboard');
+    console.log('Redirecting to dashboard...');
+    try {
+      res.redirect('/admin/');
+    } catch (redirectError) {
+      console.error('Error redirecting:', redirectError);
+      throw redirectError;
+    }
   } catch (error) {
+    console.error('Login process error:', error);
     next(error);
   }
 };
@@ -108,7 +155,8 @@ const getAttractions = async (req, res, next) => {
     const attractions = await Attraction.find().sort({ name: 1 });
     res.render('admin/attractions', {
       title: 'Manage Attractions',
-      attractions
+      attractions,
+      user: req.user
     });
   } catch (error) {
     next(error);
@@ -118,6 +166,7 @@ const getAttractions = async (req, res, next) => {
 const showAddAttraction = (req, res) => {
   res.render('admin/attraction-form', {
     title: 'Add New Attraction',
+    user: req.user,
     attraction: null,
     isEdit: false
   });
@@ -159,7 +208,8 @@ const showEditAttraction = async (req, res, next) => {
     res.render('admin/attraction-form', {
       title: 'Edit Attraction',
       attraction,
-      isEdit: true
+      isEdit: true,
+      user: req.user
     });
   } catch (error) {
     next(error);
@@ -217,7 +267,8 @@ const getAttractionDetails = async (req, res, next) => {
     res.render('admin/attraction-details', {
       title: `${attraction.name} - Details`,
       attraction,
-      reservations
+      reservations,
+      user: req.user
     });
   } catch (error) {
     next(error);
@@ -244,12 +295,22 @@ const getReservations = async (req, res, next) => {
 
     const attractions = await Attraction.find().sort({ name: 1 });
 
+    // Calculate stats for different reservation statuses
+    const stats = {
+      waiting: await Reservation.countDocuments({ status: 'active' }), // Use active for waiting
+      active: await Reservation.countDocuments({ status: 'active' }),
+      completed: await Reservation.countDocuments({ status: 'completed' }),
+      cancelled: await Reservation.countDocuments({ status: 'cancelled' })
+    };
+
     res.render('admin/reservations', {
       title: 'Manage Reservations',
       reservations,
       attractions,
       selectedStatus: status,
-      selectedAttraction: attraction || ''
+      selectedAttraction: attraction || '',
+      stats,
+      user: req.user
     });
   } catch (error) {
     next(error);
@@ -302,7 +363,8 @@ const getReservationDetails = async (req, res, next) => {
 
     res.render('admin/reservation-details', {
       title: `Reservation Details - ${reservation.confirmationCode}`,
-      reservation
+      reservation,
+      user: req.user
     });
   } catch (error) {
     next(error);
@@ -313,9 +375,37 @@ const getReservationDetails = async (req, res, next) => {
 const getSettings = async (req, res, next) => {
   try {
     const settings = await ParkSetting.find().sort({ category: 1, key: 1 });
+    
+    // Calculate stats for the settings page
+    const totalAttractions = await Attraction.countDocuments();
+    const activeReservations = await Reservation.countDocuments({ status: 'active' });
+    const openAttractions = await Attraction.countDocuments({ status: 'open' });
+    const closedAttractions = await Attraction.countDocuments({ status: 'closed' });
+    const maintenanceAttractions = await Attraction.countDocuments({ status: 'maintenance' });
+    
+    // Get visitors today (reservations created today)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const visitorsToday = await Reservation.countDocuments({
+      createdAt: { $gte: today, $lt: tomorrow }
+    });
+
+    const stats = {
+      totalAttractions,
+      activeReservations,
+      openAttractions,
+      closedAttractions,
+      maintenanceAttractions,
+      visitorsToday
+    };
+
     res.render('admin/settings', {
       title: 'Park Settings',
-      settings
+      settings,
+      stats,
+      user: req.user
     });
   } catch (error) {
     next(error);
@@ -359,9 +449,23 @@ const getNotifications = async (req, res, next) => {
       category: 'notification' 
     }).sort({ createdAt: -1 });
 
+    // Calculate stats for notifications
+    const active = await ParkSetting.countDocuments({ category: 'notification', isActive: true });
+    const inactive = await ParkSetting.countDocuments({ category: 'notification', isActive: false });
+    const total = await ParkSetting.countDocuments({ category: 'notification' });
+
+    const stats = {
+      active,
+      inactive,
+      expired: 0, // ParkSetting doesn't have expiration
+      total
+    };
+
     res.render('admin/notifications', {
       title: 'Manage Notifications',
-      notifications
+      notifications,
+      stats,
+      user: req.user
     });
   } catch (error) {
     next(error);

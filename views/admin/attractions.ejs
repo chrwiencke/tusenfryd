@@ -6,7 +6,7 @@
 
 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
     <h2 class="text-2xl font-bold text-gray-900 mb-4 sm:mb-0">All Attractions</h2>
-    <a href="/admin/attractions/create" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
+    <a href="/admin/attractions/new" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
         <i class="fas fa-plus mr-2"></i>
         Add New Attraction
     </a>
@@ -37,8 +37,8 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium <%= attraction.type === 'ride' ? 'bg-blue-100 text-blue-800' : attraction.type === 'show' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>">
-                                <%= attraction.type.charAt(0).toUpperCase() + attraction.type.slice(1) %>
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium <%= attraction.category === 'roller-coaster' ? 'bg-blue-100 text-blue-800' : attraction.category === 'thrill' ? 'bg-red-100 text-red-800' : attraction.category === 'water' ? 'bg-cyan-100 text-cyan-800' : 'bg-gray-100 text-gray-800' %>">
+                                <%= attraction.category.charAt(0).toUpperCase() + attraction.category.slice(1).replace('-', ' ') %>
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -61,15 +61,15 @@
                             <span class="text-muted">N/A</span>
                         <% } %>
                     </td>
-                    <td>
-                        <div class="btn-group" role="group">
-                            <a href="/admin/attractions/<%= attraction._id %>" class="btn btn-sm btn-outline-info" title="View Details">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex space-x-2">
+                            <a href="/admin/attractions/<%= attraction._id %>" class="text-blue-600 hover:text-blue-900 p-1 rounded" title="View Details">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="/admin/attractions/<%= attraction._id %>/edit" class="btn btn-sm btn-outline-warning" title="Edit">
+                            <a href="/admin/attractions/<%= attraction._id %>/edit" class="text-yellow-600 hover:text-yellow-900 p-1 rounded" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <button class="btn btn-sm btn-outline-danger" title="Delete" 
+                            <button class="text-red-600 hover:text-red-900 p-1 rounded" title="Delete" 
                                     onclick="confirmDelete('<%= attraction._id %>', '<%= attraction.name %>')">
                                 <i class="fas fa-trash"></i>
                             </button>
@@ -85,7 +85,7 @@
         <i class="fas fa-roller-coaster text-4xl text-gray-400 mb-4"></i>
         <h4 class="text-xl font-semibold text-gray-600 mb-2">No attractions found</h4>
         <p class="text-gray-500 mb-6">Get started by adding your first attraction.</p>
-        <a href="/admin/attractions/create" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
+        <a href="/admin/attractions/new" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
             <i class="fas fa-plus mr-2"></i> Add First Attraction
         </a>
     </div>

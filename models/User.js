@@ -21,6 +21,14 @@ const userSchema = new mongoose.Schema({
     trim: true,
     lowercase: true
   },
+  firstName: {
+    type: String,
+    trim: true
+  },
+  lastName: {
+    type: String,
+    trim: true
+  },
   role: {
     type: String,
     enum: ['admin', 'manager'],
@@ -52,7 +60,12 @@ userSchema.pre('save', async function(next) {
 
 // Compare password method
 userSchema.methods.comparePassword = async function(candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
+  console.log('Comparing passwords:');
+  console.log('Candidate password:', candidatePassword);
+  console.log('Stored hash:', this.password);
+  const result = await bcrypt.compare(candidatePassword, this.password);
+  console.log('Bcrypt compare result:', result);
+  return result;
 };
 
 // Remove password from JSON output

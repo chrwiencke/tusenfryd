@@ -114,54 +114,41 @@
                                 <% notifications.forEach(notification => { %>
                                 <tr class="hover:bg-gray-50">
                                     <td class="px-6 py-4">
-                                        <div class="text-sm font-medium text-gray-900"><%= notification.title %></div>
+                                        <div class="text-sm font-medium text-gray-900"><%= notification.key %></div>
                                         <div class="text-sm text-gray-500">
-                                            <%= notification.message.length > 60 ? notification.message.substring(0, 60) + '...' : notification.message %>
+                                            <%= notification.description && notification.description.length > 60 ? notification.description.substring(0, 60) + '...' : (notification.description || '') %>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
-                                            <%= notification.type === 'info' ? 'bg-blue-100 text-blue-800' : 
-                                                notification.type === 'warning' ? 'bg-orange-100 text-orange-800' : 
-                                                notification.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
-                                            <%= notification.type.charAt(0).toUpperCase() + notification.type.slice(1) %>
+                                            <%= notification.category === 'notification' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' %>">
+                                            <%= notification.category.charAt(0).toUpperCase() + notification.category.slice(1) %>
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
-                                            <%= notification.priority === 'low' ? 'bg-gray-100 text-gray-800' : 
-                                                notification.priority === 'medium' ? 'bg-blue-100 text-blue-800' : 
-                                                notification.priority === 'high' ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800' %>">
-                                            <%= notification.priority.charAt(0).toUpperCase() + notification.priority.slice(1) %>
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                            Normal
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <% const isExpired = notification.expiresAt && new Date(notification.expiresAt) < new Date() %>
-                                        <% if (isExpired) { %>
-                                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Expired</span>
-                                        <% } else if (notification.isActive) { %>
+                                        <% if (notification.isActive) { %>
                                             <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Active</span>
                                         <% } else { %>
-                                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800">Inactive</span>
+                                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Inactive</span>
                                         <% } %>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         <%= new Date(notification.createdAt).toLocaleDateString() %>
-                                        <% if (notification.expiresAt) { %>
-                                            <div class="text-sm text-gray-500">
-                                                Expires: <%= new Date(notification.expiresAt).toLocaleDateString() %>
-                                            </div>
-                                        <% } %>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex space-x-2">
-                                            <% if (notification.isActive && !isExpired) { %>
+                                            <% if (notification.isActive) { %>
                                                 <button class="text-orange-600 hover:text-orange-900" 
                                                         onclick="toggleNotification('<%= notification._id %>', false)"
                                                         title="Deactivate">
                                                     <i class="fas fa-pause"></i>
                                                 </button>
-                                            <% } else if (!isExpired) { %>
+                                            <% } else { %>
                                                 <button class="text-green-600 hover:text-green-900" 
                                                         onclick="toggleNotification('<%= notification._id %>', true)"
                                                         title="Activate">
@@ -176,7 +163,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <% }) %>
+                                <% }); %>
                             </tbody>
                         </table>
                     </div>

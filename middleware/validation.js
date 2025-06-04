@@ -72,10 +72,16 @@ const validateReservation = [
     .withMessage('Please provide a valid email address')
     .normalizeEmail(),
   body('guestPhone')
-    .optional()
+    .optional({ checkFalsy: true })
     .trim()
-    .matches(/^[\+]?[0-9\s\-\(\)]{8,15}$/)
-    .withMessage('Please provide a valid phone number'),
+    .custom((value) => {
+      if (value && value.length > 0) {
+        if (!/^[\+]?[0-9\s\-\(\)]{8,15}$/.test(value)) {
+          throw new Error('Please provide a valid phone number');
+        }
+      }
+      return true;
+    }),
   body('numberOfGuests')
     .isInt({ min: 1, max: 10 })
     .withMessage('Number of guests must be between 1 and 10'),
