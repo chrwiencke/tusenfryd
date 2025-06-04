@@ -20,4 +20,7 @@ router.get('/check-reservation', visitorController.checkReservation);
 // FAQ page
 router.get('/faq', visitorController.getFAQ);
 
+// Dynamic opening hours page
+router.get('/hours', visitorController.getHours);
+
 module.exports = router;

@@ -15,7 +15,12 @@ const getHomepage = async (req, res, next) => {
       await attraction.save();
     }
 
-    const parkHours = await ParkSetting.getSetting('park_hours', { open: '10:00', close: '22:00' });
+    // Fetch park operating hours settings from database
+    const openTime = await ParkSetting.getSetting('openTime', '09:00');
+    const closeTime = await ParkSetting.getSetting('closeTime', '18:00');
+    const operatingDays = await ParkSetting.getSetting('operatingDays', ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']);
+    const specialHours = await ParkSetting.getSetting('specialHours', '');
+    const parkHours = { open: openTime, close: closeTime, days: operatingDays, note: specialHours };
     const notifications = await ParkSetting.find({ 
       category: 'notification', 
       isActive: true 
@@ -234,6 +239,23 @@ const getFAQ = async (req, res, next) => {
   }
 };
 
+// Render dynamic opening hours page
+const getHours = async (req, res, next) => {
+  try {
+    const openTime = await ParkSetting.getSetting('openTime', '09:00');
+    const closeTime = await ParkSetting.getSetting('closeTime', '18:00');
+    const operatingDays = await ParkSetting.getSetting('operatingDays', ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']);
+    const specialHours = await ParkSetting.getSetting('specialHours', '');
+    const parkHours = { open: openTime, close: closeTime, days: operatingDays, note: specialHours };
+    res.render('visitor/hours', {
+      title: 'Opening Hours',
+      parkHours
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getHomepage,
   searchAttractions,
@@ -241,5 +263,6 @@ module.exports = {
   showReservationForm,
   createReservation,
   checkReservation,
-  getFAQ
+  getFAQ,
+  getHours
 };
